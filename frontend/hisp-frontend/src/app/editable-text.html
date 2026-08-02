@@ -1,0 +1,5 @@
+<div>
+    @if (editing()) {
+        <input [value]="savedText()" (input)="savedText.set(($any($event.target)).value)" (blur)="editing.set(false)"/>
+    } @else {<p (click)="editing.set(true)">{{savedText()}}</p>}
+</div>
