@@ -10,6 +10,12 @@ import { Component, signal } from "@angular/core";
  */
 export class EditableText {
     editing = signal(false);
-    savedText = signal("Anonymous");
-    currentText = signal(this.savedText);
+    savedText = signal('Anonymous');
+    currentText = signal(this.savedText());
+
+	saveUserInput() {
+		if (this.currentText() === "" || this.currentText() == null) {
+			this.currentText.set('Anonymous');
+		}
+	}
 }
