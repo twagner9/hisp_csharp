@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { EditableText } from './EditableText';
+import { UploadButton } from './UploadButton';
 
 @Component({
   selector: 'app-root',
-  imports: [EditableText],
+  imports: [EditableText, UploadButton],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
