@@ -46,7 +46,11 @@
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[10.0.10, )"
+              "version": "[10.0.11, )"
+            },
+            "StbImageSharp": {
+              "target": "Package",
+              "version": "[2.30.16, )"
             }
           },
           "imports": [

@@ -1,3 +1,6 @@
 {
-    "dotnet.defaultSolution": "HISP.slnx"
+  "dotnet.defaultSolution": "HISP.slnx",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.suggestSelection": "recentlyUsedByPrefix",
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false
 }
