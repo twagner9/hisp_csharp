@@ -1,0 +1,6 @@
+@HispBackend_HostAddress = http://localhost:5192
+
+GET {{HispBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
