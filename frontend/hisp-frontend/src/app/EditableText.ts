@@ -1,4 +1,4 @@
-import { Component, ElementRef, signal, effect, ViewChild, input } from "@angular/core";
+import { Component, ElementRef, signal, effect, ViewChild, input, afterRenderEffect } from "@angular/core";
 import { UserNameService } from "./user-name.service";
 
 @Component ({
@@ -28,11 +28,14 @@ export class EditableText {
 			this.savedText.set(this.startingText());
 		});
 
-        effect(() => {
-            if (!this.editing()) return;
+		// afterNextRender runs only once, while afterRenderEffect is tied to the signal,
+		// so it reacts to the state once the signal is updated, and applies the changes
+		// to DOM after the update occurred -- which is what I want in this scenario.
+		afterRenderEffect(() => {
+			if (!this.editing()) return;
 
-            queueMicrotask(() => this.editableTextInput?.nativeElement.focus());
-        })
+			this.editableTextInput?.nativeElement.focus();
+		});
     }
 
 	saveUserInput() {
