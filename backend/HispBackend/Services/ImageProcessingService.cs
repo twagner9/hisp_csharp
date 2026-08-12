@@ -4,22 +4,37 @@ using StbImageSharp;
 
 public class ImageProcessingService
 {
-	private static string DEVEL_IMG_PATH = "/home/twagner/Pictures/Tucker_Dog_In_The_Grass.jpg";
+    private readonly IWebHostEnvironment _environment;
+	private static string DEVEL_IMG_PATH;
+    
+    public ImageProcessingService(IWebHostEnvironment env)
+    {
+        _environment = env;
+        DEVEL_IMG_PATH = Path.Combine(_environment.ContentRootPath, "TestData", "tuck_tuck.jpg");
+    }
 	public void Process(string imagePath)
 	{
-		byte[] bytes = File.ReadAllBytes(DEVEL_IMG_PATH);
-		ImageResult image = ImageResult.FromMemory(bytes, ColorComponents.RedGreenBlueAlpha);
-		string imgType = image.GetType().ToString();
-		Console.WriteLine("Image width: " + image.Width);
-		Console.WriteLine("Image height: " + image.Height);
-		Console.WriteLine("Image type: " + imgType);
-		Console.WriteLine("Image name: " + image.ToString());
-		for (int y = 0; y < image.Height; y++)
-		{
-			for (int x = 0; x < image.Width; x++)
-			{
+        using (var stream = File.OpenRead(DEVEL_IMG_PATH))
+        {
+            ImageInfo? info = ImageInfo.FromStream(stream);
+	    	ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+
+            string imgType = image.GetType().ToString();
+            Console.WriteLine("Image width: " + image.Width);
+            Console.WriteLine("Image height: " + image.Height);
+            if (info.HasValue)
+                Console.WriteLine("Image type: " + info.GetType());
+            Console.WriteLine("Image name: " + image.ToString());
+        }
+		// byte[] bytes = File.ReadAllBytes(DEVEL_IMG_PATH);
+
+
+		// for (int y = 0; y < image.Height; y++)
+		// {
+		// 	for (int x = 0; x < image.Width; x++)
+		// 	{
 				
-			}	
-		}	
+		// 	}	
+		// }	
 	}
 }

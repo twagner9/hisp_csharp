@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HispBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e59484ff1883e8ebd3d3a213f5b515ead9c10405")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f6a88c9042a83ee8df8d6a36daea6188aa65404")]
 [assembly: System.Reflection.AssemblyProductAttribute("HispBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HispBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
