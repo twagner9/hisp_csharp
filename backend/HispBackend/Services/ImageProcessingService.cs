@@ -5,27 +5,24 @@ using StbImageSharp;
 public class ImageProcessingService
 {
     private readonly IWebHostEnvironment _environment;
-	private static string DEVEL_IMG_PATH;
+	private static string? DEVEL_IMG_PATH;
     
     public ImageProcessingService(IWebHostEnvironment env)
     {
         _environment = env;
         DEVEL_IMG_PATH = Path.Combine(_environment.ContentRootPath, "TestData", "tuck_tuck.jpg");
     }
-	public void Process(string imagePath)
-	{
-        using (var stream = File.OpenRead(DEVEL_IMG_PATH))
-        {
-            ImageInfo? info = ImageInfo.FromStream(stream);
-	    	ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 
-            string imgType = image.GetType().ToString();
-            Console.WriteLine("Image width: " + image.Width);
-            Console.WriteLine("Image height: " + image.Height);
-            if (info.HasValue)
-                Console.WriteLine("Image type: " + info.GetType());
-            Console.WriteLine("Image name: " + image.ToString());
-        }
+	public void Process(Stream imageStream)
+	{
+		ImageResult image = ImageResult.FromStream(imageStream, ColorComponents.RedGreenBlueAlpha);
+
+		string imgType = image.GetType().ToString();
+		Console.WriteLine("Image width: " + image.Width);
+		Console.WriteLine("Image height: " + image.Height);
+		Console.WriteLine("Image type: " + image.GetType());
+		Console.WriteLine("Image name: " + image.ToString());
+		
 		// byte[] bytes = File.ReadAllBytes(DEVEL_IMG_PATH);
 
 
@@ -36,5 +33,49 @@ public class ImageProcessingService
 				
 		// 	}	
 		// }	
+	}
+
+	public byte[] SimpleBlur(Stream imageStream, int kernelRadius)
+	{
+		ImageResult img = ImageResult.FromStream(imageStream);
+		byte[] src = img.Data;
+		byte[] dst = new byte[src.Length];
+
+		// const int RGB_OFFSET = 3;
+		for (int y = 0; y < img.Height; y++)
+		{
+			for (int x = 0; x < img.Width; x++)
+			{
+				long centralIdx = y * img.Width + x;
+				int pixelSumR = 0;
+				int pixelSumG = 0;
+				int pixelSumB = 0;
+				int addedPixels = 0;
+				for (int kernelRow = -kernelRadius; kernelRow < kernelRadius; kernelRow++)
+				{
+					for (int kernelCol = -kernelRadius; kernelCol < kernelRadius; kernelCol++)
+					{
+						if (x + kernelCol < 0 || x + kernelCol > img.Width || y + kernelRow < 0 || y + kernelRow > img.Height)
+						{
+							continue;
+						}
+						long kernelIdx = (y + kernelRow) * img.Width + x + kernelCol;
+						pixelSumR += img.Data[kernelIdx];
+						pixelSumG += img.Data[kernelIdx + 1];
+						pixelSumB += img.Data[kernelIdx + 2];
+						++addedPixels;
+					}	
+				}
+				int avgR = pixelSumR / addedPixels;
+				int avgG = pixelSumR / addedPixels;
+				int avgB = pixelSumR / addedPixels;
+
+				dst[centralIdx] = (byte)avgR;
+				dst[centralIdx + 1] = (byte)avgG;
+				dst[centralIdx + 2] = (byte)avgB;
+			}
+		}
+
+		return dst;
 	}
 }

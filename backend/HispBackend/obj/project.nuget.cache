@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "t4O4b4o3LTI=",
+  "dgSpecHash": "JyAfDAzo0jE=",
   "success": true,
-  "projectFilePath": "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
+  "projectFilePath": "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
   "expectedPackageFiles": [
-    "/home/tim/.nuget/packages/microsoft.aspnetcore.openapi/10.0.11/microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",
-    "/home/tim/.nuget/packages/microsoft.openapi/2.7.5/microsoft.openapi.2.7.5.nupkg.sha512",
-    "/home/tim/.nuget/packages/stbimagesharp/2.30.16/stbimagesharp.2.30.16.nupkg.sha512"
+    "/home/twagner/.nuget/packages/microsoft.aspnetcore.openapi/10.0.11/microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",
+    "/home/twagner/.nuget/packages/microsoft.openapi/2.7.5/microsoft.openapi.2.7.5.nupkg.sha512",
+    "/home/twagner/.nuget/packages/stbimagesharp/2.30.16/stbimagesharp.2.30.16.nupkg.sha512"
   ],
   "logs": []
 }

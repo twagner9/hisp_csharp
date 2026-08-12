@@ -69,3 +69,4 @@
 /home/tim/VS_Projects/hisp_csharp/backend/HispBackend/obj/Debug/net10.0/HispBackend.genruntimeconfig.cache
 /home/tim/VS_Projects/hisp_csharp/backend/HispBackend/obj/Debug/net10.0/ref/HispBackend.dll
 /home/tim/VS_Projects/hisp_csharp/backend/HispBackend/bin/Debug/net10.0/TestData/tuck_tuck.jpg
+/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/bin/Debug/net10.0/TestData/tuck_tuck.jpg

@@ -1,26 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj": {}
+    "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj": {}
   },
   "projects": {
-    "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj": {
+    "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
+        "projectUniqueName": "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
         "projectName": "HispBackend",
-        "projectPath": "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
-        "packagesPath": "/home/tim/.nuget/packages/",
-        "outputPath": "/home/tim/VS_Projects/hisp_csharp/backend/HispBackend/obj/",
+        "projectPath": "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/HispBackend.csproj",
+        "packagesPath": "/home/twagner/.nuget/packages/",
+        "outputPath": "/home/twagner/VS_Projects/hisp_csharp/backend/HispBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/tim/.nuget/NuGet/NuGet.Config"
+          "/home/twagner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -73,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.110/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/var/snap/dotnet/common/dotnet/sdk/10.0.110/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

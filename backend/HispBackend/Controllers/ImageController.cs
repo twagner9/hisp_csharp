@@ -20,11 +20,38 @@ public class ImageController : ControllerBase
         return Ok("Image API is working");
     }
 
-    [HttpGet("test")]
-    public IActionResult TestProcessing()
-    {
-        _imageProcessingService.Process("");
+	[HttpPost("process")]
+	public IActionResult ProcessImage(IFormFile image)
+	{
+		if (image == null || image.Length == 0)
+		{
+			return BadRequest("No image provided");
+		}
 
-        return Ok("Testing complete.");
-    }
+		Console.WriteLine("Received image: " + image.FileName);
+		Console.WriteLine("Content Type: " + image.ContentType);
+		Console.WriteLine("Size: " + image.Length);
+		using Stream stream = image.OpenReadStream();
+		_imageProcessingService.Process(stream);
+
+		return Ok(new
+		{
+			fileName = image.FileName
+		});
+	}
+
+	// Navigate to localhost:5192/api/Image/process/blur
+	[HttpPost("process/blur")]
+	public IActionResult SimpleBlur(IFormFile image, int kernelRadius)
+	{
+		if (image == null || image.Length == 0)
+		{
+			return BadRequest("Invalid image provided.");
+		}
+		Console.WriteLine("ImageController.GuassianBlur executing");
+		Stream s = image.OpenReadStream();
+		byte[] res = _imageProcessingService.SimpleBlur(s, kernelRadius);
+		Console.WriteLine("Completed SimpleBlur");
+		return File(res, "image/png");
+	}
 }
