@@ -2,5 +2,7 @@
   "dotnet.defaultSolution": "HISP.slnx",
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.suggestSelection": "recentlyUsedByPrefix",
-  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false
+"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
+"editor.formatOnSave": true,
+"editor.defaultFormatter": "esbenp.prettier-vscode"
 }
