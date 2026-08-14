@@ -1,5 +1,5 @@
-<select name="image-ops" id="op-select" [(ngModel)]="selectedOp">
-  <option value="blur" selected>Simple Blur</option>
-  <option value="gblur">Gaussian Blur</option>
-  <option value="gscale">Grayscale Conversion</option>
+<select (change)="updateSelectedOp($event)">
+  @for (option of options; track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
 </select>

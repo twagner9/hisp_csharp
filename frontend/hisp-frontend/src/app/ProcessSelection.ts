@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SelectedOpService } from './filter-selection.service';
+import { SelectedOpService } from './prcoess-selection.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,10 +9,18 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
 })
 export class ProcessSelection {
+  options = [
+    { value: 'blur', label: 'Simple Blur' },
+    { value: 'gblur', label: 'Gaussian Blur' },
+    { value: 'grayscale', label: 'Grayscale' },
+  ];
+
   selectedOp = 'blur';
   constructor(public svc: SelectedOpService) {}
 
-  updateSelectedOp(value: string) {
-    this.svc.userSelectedProcess.set(value);
+  updateSelectedOp(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    console.log('Selected value:', select.value);
+    this.svc.userSelectedProcess.set(select.value);
   }
 }

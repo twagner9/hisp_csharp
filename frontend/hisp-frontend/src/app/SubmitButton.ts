@@ -1,26 +1,26 @@
-import { Component, signal, effect } from '@angular/core';
+import { Component, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SelectedOpService } from './filter-selection.service';
+import { SelectedOpService } from './prcoess-selection.service';
 
 @Component({
   selector: 'submit-button',
-  template: `<button (onclick)="submitProcessingJob()">Submit</button>`,
+  template: `<button (click)="submitProcessingJob()" [disabled]="!readyForSubmission()">
+    Submit
+  </button>`,
 })
 export class SubmitButton {
-	readyForSubmission = signal<boolean>(false);
+  readyForSubmission = computed(() => {
+    const data = this.svc.formData();
+    return data !== null && data !== undefined;
+  });
 
   constructor(
     public svc: SelectedOpService,
     private http: HttpClient,
-  ) {
-		effect(() => {
-			if (this.svc.formData() !== null) {
-				this.readyForSubmission.set(true);
-			}
-		});
-	}
+  ) {}
   submitProcessingJob() {
     // Pass the userSelectedProcess to the backend along with the image data
+    console.log(`submitProcessingJob() has ${this.svc.userSelectedProcess()}`);
     this.http
       .post<{ fileName: string }>(
         `http://localhost:5192/api/Image/process/${this.svc.userSelectedProcess()}`,

@@ -66,9 +66,18 @@ public class ImageProcessingService
 						++addedPixels;
 					}	
 				}
-				int avgR = pixelSumR / addedPixels;
-				int avgG = pixelSumR / addedPixels;
-				int avgB = pixelSumR / addedPixels;
+
+				int avgR = pixelSumR;
+				int avgG = pixelSumG;
+				int avgB = pixelSumB;
+
+				// addedPixels should never really be 0 here...why is this necessary?
+				if (addedPixels > 0)
+				{
+					avgR /= addedPixels;
+					avgG /= addedPixels;
+					avgB /= addedPixels;
+				}
 
 				dst[centralIdx] = (byte)avgR;
 				dst[centralIdx + 1] = (byte)avgG;

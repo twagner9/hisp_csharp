@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ProcessSelection } from './ProcessSelection';
-import { SelectedOpService } from './filter-selection.service';
+import { SelectedOpService } from './prcoess-selection.service';
 
 @Component({
   selector: 'upload-button',

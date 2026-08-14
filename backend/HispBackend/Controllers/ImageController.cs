@@ -44,11 +44,12 @@ public class ImageController : ControllerBase
 	[HttpPost("process/blur")]
 	public IActionResult SimpleBlur(IFormFile image, int kernelRadius)
 	{
+		Console.WriteLine("Image received.");
 		if (image == null || image.Length == 0)
 		{
 			return BadRequest("Invalid image provided.");
 		}
-		Console.WriteLine("ImageController.GuassianBlur executing");
+		Console.WriteLine("ImageController.SimpleBlur executing");
 		Stream s = image.OpenReadStream();
 		byte[] res = _imageProcessingService.SimpleBlur(s, kernelRadius);
 		Console.WriteLine("Completed SimpleBlur");
