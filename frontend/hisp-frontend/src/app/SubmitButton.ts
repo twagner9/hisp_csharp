@@ -30,10 +30,12 @@ export class SubmitButton {
         },
       )
       .subscribe({
-        next: (response) => {
-          console.log('Backend received', response);
-          console.log('MIME type:', response.type);
-          console.log('Size: ', response.size, 'bytes');
+        next: (blob) => {
+          console.log('Backend received', blob);
+          console.log('MIME type:', blob.type);
+          console.log('Size: ', blob.size, 'bytes');
+          const imageUrl = URL.createObjectURL(blob);
+          console.log(imageUrl);
         },
         error: (error) => {
           console.error('Upload failed when submitting processing job:', error);
