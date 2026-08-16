@@ -22,18 +22,25 @@ export class SubmitButton {
     // Pass the userSelectedProcess to the backend along with the image data
     console.log(`submitProcessingJob() has ${this.svc.userSelectedProcess()}`);
     this.http
-      .post<{ fileName: string }>(
+      .post(
         `http://localhost:5192/api/Image/process/${this.svc.userSelectedProcess()}`,
         this.svc.formData(),
+        {
+          responseType: 'blob',
+        },
       )
       .subscribe({
         next: (response) => {
-          console.log('Backend received', response.fileName);
+          console.log('Backend received', response);
+          console.log('MIME type:', response.type);
+          console.log('Size: ', response.size, 'bytes');
         },
         error: (error) => {
-          console.error('Upload failed:', error);
+          console.error('Upload failed when submitting processing job:', error);
+        },
+        complete: () => {
+          console.log('Successfully transmitted.');
         },
       });
-    this.svc.userSelectedProcess();
   }
 }
