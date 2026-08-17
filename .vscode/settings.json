@@ -2,7 +2,23 @@
   "dotnet.defaultSolution": "HISP.slnx",
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.suggestSelection": "recentlyUsedByPrefix",
-"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
-"editor.formatOnSave": true,
-"editor.defaultFormatter": "esbenp.prettier-vscode"
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
+  "editor.formatOnSave": true,
+  "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2,
+      "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+
+  },
+  "[csharp]": {
+    "editor.maxTokenizationLineLength": 2500,
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true
+  },
 }

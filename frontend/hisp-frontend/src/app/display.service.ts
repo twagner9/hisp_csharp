@@ -4,4 +4,5 @@ import { Injectable, signal } from '@angular/core';
 export class DisplayService {
   readonly processedImages = signal<string[]>([]);
   readonly mostRecentlyProcessedImg = signal<string>('');
+  readonly uploadedImg = signal<string | null>('');
 }

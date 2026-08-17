@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ProcessSelection } from './ProcessSelection';
 import { SelectedOpService } from './prcoess-selection.service';
+import { DisplayService } from './display.service';
 
 @Component({
   selector: 'upload-button',
@@ -11,7 +12,10 @@ export class UploadButton {
   gettingImage = signal<boolean>(false);
 
   // Give access to the HttpClient for the whole class
-  constructor(public svc: SelectedOpService) {}
+  constructor(
+    public selectionSvc: SelectedOpService,
+    public displaySvc: DisplayService,
+  ) {}
 
   onFileSelected(event: Event) {
     this.gettingImage.set(true);
@@ -28,9 +32,11 @@ export class UploadButton {
     console.log('File type: ', file.type);
     console.log('File size: ', file.size);
 
-    this.svc.formData.set(new FormData());
-    this.svc.formData()?.append('image', file);
-    this.svc.imageUploaded.set(true);
+    this.selectionSvc.formData.set(new FormData());
+    this.selectionSvc.formData()?.append('image', file);
+    this.displaySvc.uploadedImg.set(URL.createObjectURL(file));
+
+    this.selectionSvc.imageUploaded.set(true);
     this.gettingImage.set(false);
   }
 }

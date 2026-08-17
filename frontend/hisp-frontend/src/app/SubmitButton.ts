@@ -37,7 +37,8 @@ export class SubmitButton {
           console.log('MIME type:', blob.type);
           console.log('Size: ', blob.size, 'bytes');
           const imageUrl = URL.createObjectURL(blob);
-          this.displaySvc.processedImages.update((images) => [...images, imageUrl]); // Add to Blob array that will be accessed by the ImageDisplay
+          this.displaySvc.mostRecentlyProcessedImg.set(imageUrl);
+          this.displaySvc.processedImages.update((images) => [...images, imageUrl]);
           console.log('Num processed imgs: ', this.displaySvc.processedImages().length);
         },
         error: (error) => {

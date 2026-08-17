@@ -1,2 +1,5 @@
-<img [src]="]" />
-<img [src]="this.displaySvc.processedImages()[this.displaySvc.imgIdx()]" />
+<img [src]="this.displaySvc.uploadedImg()" />
+
+@if (this.displaySvc.mostRecentlyProcessedImg().length > 1) {
+  <img [src]="this.displaySvc.mostRecentlyProcessedImg()" />
+}

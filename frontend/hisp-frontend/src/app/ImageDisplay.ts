@@ -6,6 +6,6 @@ import { DisplayService } from './display.service';
   templateUrl: 'image-display.html',
 })
 export class ImageDisplay {
-  constructor(displaySvc: DisplayService) {}
+  constructor(public displaySvc: DisplayService) {}
   imgIdx = signal<number>(0);
 }
