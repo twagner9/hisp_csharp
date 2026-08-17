@@ -23,6 +23,10 @@ export class SubmitButton {
   submitProcessingJob() {
     // Pass the userSelectedProcess to the backend along with the image data
     console.log(`submitProcessingJob() has ${this.selectionSvc.userSelectedProcess()}`);
+    this.selectionSvc.formData()?.append('kernelRadius', '3');
+
+    console.log([...this.selectionSvc.formData()!.entries()]);
+
     this.http
       .post(
         `http://localhost:5192/api/Image/process/${this.selectionSvc.userSelectedProcess()}`,
@@ -42,6 +46,11 @@ export class SubmitButton {
           console.log('Num processed imgs: ', this.displaySvc.processedImages().length);
         },
         error: (error) => {
+          if (error.error instanceof Blob) {
+            error.error.text().then((message: string) => {
+              console.error('Backend error:', message);
+            });
+          }
           console.error('Upload failed when submitting processing job:', error);
         },
         complete: () => {
