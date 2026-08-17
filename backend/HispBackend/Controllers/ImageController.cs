@@ -49,6 +49,14 @@ public class ImageController : ControllerBase
         {
             return BadRequest("Invalid image provided.");
         }
+        if (kernelRadius > 6)
+        {
+            return BadRequest("Provided kernel radius is too large.");
+        }
+        if (kernelRadius < 1)
+        {
+            return BadRequest("Provided kernel radius is less than 0.");
+        }
         Console.WriteLine("ImageController.SimpleBlur executing");
         Stream s = image.OpenReadStream();
         byte[] res = _imageProcessingService.SimpleBlur(s, kernelRadius);

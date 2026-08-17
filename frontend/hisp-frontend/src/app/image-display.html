@@ -1,5 +1,5 @@
-<img [src]="this.displaySvc.uploadedImg()" />
+<img [src]="displaySvc.uploadedImg()" />
 
-@if (this.displaySvc.mostRecentlyProcessedImg().length > 1) {
-  <img [src]="this.displaySvc.mostRecentlyProcessedImg()" />
+@if (displaySvc.mostRecentlyProcessedImg()) {
+  <img [src]="displaySvc.mostRecentlyProcessedImg()" />
 }

@@ -1,28 +1,31 @@
 namespace HispBackend.Services;
+
 using System.IO;
 using StbImageSharp;
+using StbImageWriteSharp;
+using System.Runtime.InteropServices;
 
 public class ImageProcessingService
 {
-    private readonly IWebHostEnvironment _environment;
+	private readonly IWebHostEnvironment _environment;
 	private static string? DEVEL_IMG_PATH;
-    
-    public ImageProcessingService(IWebHostEnvironment env)
-    {
-        _environment = env;
-        DEVEL_IMG_PATH = Path.Combine(_environment.ContentRootPath, "TestData", "tuck_tuck.jpg");
-    }
+
+	public ImageProcessingService(IWebHostEnvironment env)
+	{
+		_environment = env;
+		DEVEL_IMG_PATH = Path.Combine(_environment.ContentRootPath, "TestData", "tuck_tuck.jpg");
+	}
 
 	public void Process(Stream imageStream)
 	{
-		ImageResult image = ImageResult.FromStream(imageStream, ColorComponents.RedGreenBlueAlpha);
+		ImageResult image = ImageResult.FromStream(imageStream, StbImageSharp.ColorComponents.RedGreenBlueAlpha);
 
 		string imgType = image.GetType().ToString();
 		Console.WriteLine("Image width: " + image.Width);
 		Console.WriteLine("Image height: " + image.Height);
 		Console.WriteLine("Image type: " + image.GetType());
 		Console.WriteLine("Image name: " + image.ToString());
-		
+
 		// byte[] bytes = File.ReadAllBytes(DEVEL_IMG_PATH);
 
 
@@ -30,7 +33,7 @@ public class ImageProcessingService
 		// {
 		// 	for (int x = 0; x < image.Width; x++)
 		// 	{
-				
+
 		// 	}	
 		// }	
 	}
@@ -64,7 +67,7 @@ public class ImageProcessingService
 						pixelSumG += img.Data[kernelIdx + 1];
 						pixelSumB += img.Data[kernelIdx + 2];
 						++addedPixels;
-					}	
+					}
 				}
 
 				int avgR = pixelSumR;
@@ -85,6 +88,13 @@ public class ImageProcessingService
 			}
 		}
 
-		return dst;
+		// dst is a byte[], but it lacks the formatting required to return an appropriate file
+		// from controller to the frontend. Use StbImageWriteSharp to add this necessary data,
+		// and return this instead.
+		var writer = new ImageWriter();
+		var outputStream = new MemoryStream();
+		writer.WritePng(dst, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
+
+		return outputStream.ToArray();
 	}
 }

@@ -12,6 +12,7 @@
     <Content Include="TestData/tuck_tuck.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
   </ItemGroup>
 
 </Project>
