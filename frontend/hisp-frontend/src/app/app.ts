@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { UploadButton } from './UploadButton';
-import { NameText } from './NameText';
-import { ProcessSelection } from './ProcessSelection';
-import { SubmitButton } from './SubmitButton';
+import { UploadButton } from './features/image-upload/UploadButton';
+import { NameText } from './features/user-info/NameText';
+import { ProcessSelection } from './features/process-selection/ProcessSelection';
+import { SubmitButton } from './features/submit/SubmitButton';
 import { ImageDisplay } from './ImageDisplay';
 
 @Component({

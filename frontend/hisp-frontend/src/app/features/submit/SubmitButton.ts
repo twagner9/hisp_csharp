@@ -1,7 +1,7 @@
 import { Component, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SelectedOpService } from './prcoess-selection.service';
-import { DisplayService } from './display.service';
+import { SelectedOpService } from '../../core/services/prcoess-selection.service';
+import { DisplayService } from '../../core/services/display.service';
 
 @Component({
   selector: 'submit-button',

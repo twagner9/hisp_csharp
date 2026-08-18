@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { SelectedOpService } from './prcoess-selection.service';
+import { SelectedOpService } from '../../core/services/prcoess-selection.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({

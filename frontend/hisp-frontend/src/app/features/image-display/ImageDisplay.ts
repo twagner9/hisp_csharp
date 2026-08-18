@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { DisplayService } from './display.service';
+import { DisplayService } from './core/services/display.service';
 
 @Component({
   selector: 'image-display',
