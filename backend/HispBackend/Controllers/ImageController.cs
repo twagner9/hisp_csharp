@@ -42,7 +42,7 @@ public class ImageController : ControllerBase
 
     // Navigate to localhost:5192/api/Image/process/blur
     [HttpPost("process/blur")]
-    public IActionResult SimpleBlur(IFormFile image, int kernelRadius)
+    public IActionResult SimpleBlur([FromForm] IFormFile image, [FromForm] int kernelRadius)
     {
         Console.WriteLine("Image received.");
         if (image == null || image.Length == 0)

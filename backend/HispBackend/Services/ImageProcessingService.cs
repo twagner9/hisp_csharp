@@ -55,20 +55,20 @@ public class ImageProcessingService
         {
             for (int x = 0; x < img.Width; x++)
             {
-                long centralIdx = y * img.Width + x;
+                long centralIdx = (y * img.Width + x) * 3;
                 int pixelSumR = 0;
                 int pixelSumG = 0;
                 int pixelSumB = 0;
                 int addedPixels = 0;
-                for (int kernelRow = -kernelRadius; kernelRow < kernelRadius; kernelRow++)
+                for (int kernelRow = -kernelRadius; kernelRow <= kernelRadius; kernelRow++)
                 {
-                    for (int kernelCol = -kernelRadius; kernelCol < kernelRadius; kernelCol++)
+                    for (int kernelCol = -kernelRadius; kernelCol <= kernelRadius; kernelCol++)
                     {
-                        if (x + kernelCol < 0 || x + kernelCol > img.Width || y + kernelRow < 0 || y + kernelRow > img.Height)
+                        if (x + kernelCol < 0 || x + kernelCol >= img.Width || y + kernelRow < 0 || y + kernelRow >= img.Height)
                         {
                             continue;
                         }
-                        long kernelIdx = (y + kernelRow) * img.Width + x + kernelCol;
+                        long kernelIdx = ((y + kernelRow) * img.Width + x + kernelCol) * 3;
                         pixelSumR += img.Data[kernelIdx];
                         pixelSumG += img.Data[kernelIdx + 1];
                         pixelSumB += img.Data[kernelIdx + 2];
@@ -80,7 +80,7 @@ public class ImageProcessingService
                 int avgG = pixelSumG;
                 int avgB = pixelSumB;
 
-                // addedPixels should never really be 0 here...why is this necessary?
+                // addPixels could be 0 if the surrounding pixels all happen to be 0
                 if (addedPixels > 0)
                 {
                     avgR /= addedPixels;
