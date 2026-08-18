@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { UploadButton } from './features/image-upload/UploadButton';
-import { NameText } from './features/user-info/NameText';
-import { ProcessSelection } from './features/process-selection/ProcessSelection';
-import { SubmitButton } from './features/submit/SubmitButton';
-import { ImageDisplay } from './ImageDisplay';
+import { UploadButton } from './features/image-upload/upload-button';
+import { NameText } from './features/user-info/name-text';
+import { ProcessSelection } from './features/process-selection/process-selection';
+import { SubmitButton } from './features/submit/submit-button';
+import { ImageDisplay } from './features/image-display/image-display';
 
 @Component({
   selector: 'app-root',

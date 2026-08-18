@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ProcessSelection } from '../process-selection/ProcessSelection';
+import { ProcessSelection } from '../process-selection/process-selection';
 import { SelectedOpService } from '../../core/services/prcoess-selection.service';
 import { DisplayService } from '../../core/services/display.service';
 

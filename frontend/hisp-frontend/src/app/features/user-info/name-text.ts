@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { UserNameService } from '../../core/services/user-name.service';
-import { EditableText } from './EditableText';
+import { EditableText } from './editable-text';
 
 @Component({
   selector: 'name-text',
