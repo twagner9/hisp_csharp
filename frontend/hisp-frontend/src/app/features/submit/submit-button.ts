@@ -11,7 +11,7 @@ import { DisplayService } from '../../core/services/display.service';
 })
 export class SubmitButton {
   readyForSubmission = computed(() => {
-    const data = this.selectionSvc.formData();
+    const data = this.selectionSvc.image();
     return data !== null && data !== undefined;
   });
 
@@ -22,15 +22,33 @@ export class SubmitButton {
   ) {}
   submitProcessingJob() {
     // Pass the userSelectedProcess to the backend along with the image data
-    console.log(`submitProcessingJob() has ${this.selectionSvc.userSelectedProcess()}`);
-    this.selectionSvc.formData()?.append('kernelRadius', '3');
+    const formData: FormData = new FormData();
+    const image = this.selectionSvc.image();
+    if (image !== null) {
+      formData.append('image', image);
+    } else {
+      console.error('Passed null image when submitting job.');
+      return;
+    }
 
-    console.log([...this.selectionSvc.formData()!.entries()]);
+    console.log(`submitProcessingJob() has ${this.selectionSvc.userSelectedProcess()}`);
+    if (
+      this.selectionSvc.userSelectedProcess() === 'blur' ||
+      this.selectionSvc.userSelectedProcess() === 'gblur'
+    ) {
+      formData?.append('kernelRadius', this.selectionSvc.kernelVal().toString());
+
+      if (this.selectionSvc.userSelectedProcess() === 'gblur') {
+        formData?.append('sigma', this.selectionSvc.sigmaVal().toString());
+      }
+    }
+
+    console.log([...formData!.entries()]);
 
     this.http
       .post(
         `http://localhost:5192/api/Image/process/${this.selectionSvc.userSelectedProcess()}`,
-        this.selectionSvc.formData(),
+        formData,
         {
           responseType: 'blob',
         },

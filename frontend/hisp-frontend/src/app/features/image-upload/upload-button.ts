@@ -32,8 +32,7 @@ export class UploadButton {
     console.log('File type: ', file.type);
     console.log('File size: ', file.size);
 
-    this.selectionSvc.formData.set(new FormData());
-    this.selectionSvc.formData()?.append('image', file);
+    this.selectionSvc.image.set(file);
     this.displaySvc.uploadedImg.set(URL.createObjectURL(file));
 
     this.selectionSvc.imageUploaded.set(true);

@@ -1,5 +1,9 @@
-<img [src]="displaySvc.uploadedImg()" />
+<div class="originalImageArea">
+  <img #originalImage [src]="displaySvc.uploadedImg()" />
+</div>
 
 @if (displaySvc.mostRecentlyProcessedImg()) {
-  <img [src]="displaySvc.mostRecentlyProcessedImg()" />
+  <div class="processedImageArea">
+    <img #processedImage [src]="displaySvc.mostRecentlyProcessedImg()" />
+  </div>
 }
