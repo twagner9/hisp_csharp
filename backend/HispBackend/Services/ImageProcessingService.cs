@@ -134,7 +134,12 @@ public class ImageProcessingService
 		// First set up the Guassian weights:
 		double sum = 0;
 		int size = 2 * kernelRadius + 1;
-		double[] weights = new double[size];
+
+		// Number of weights is NOT equivalent to the size of the kernel; it's
+		// size^2 because size is merely the dimensions of the kernel. The
+		// actual kernel positions are then dim * dim, or size * size in this
+		// case, and must all be filled in.
+		double[] weights = new double[size * size];
 		for (int y = -kernelRadius; y <= kernelRadius; y++)
 		{
 			for (int x = -kernelRadius; x <= kernelRadius; x++)

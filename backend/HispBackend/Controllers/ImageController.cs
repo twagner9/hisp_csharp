@@ -49,7 +49,7 @@ public class ImageController : ControllerBase
 		{
 			return BadRequest("Invalid image provided.");
 		}
-		if (kernelRadius > 9)
+		if (kernelRadius > 13)
 		{
 			return BadRequest("Provided kernel radius is too large.");
 		}
@@ -58,6 +58,7 @@ public class ImageController : ControllerBase
 			return BadRequest("Provided kernel radius is 0 or less.");
 		}
 		Console.WriteLine("ImageController.SimpleBlur executing");
+
 		// Java's equivalent is try-with-resource: try (BufferedWriter b = new BufferedWriter(file)), which limits
 		// the BufferedWriter's scope. The using keyword is the same here; it's saying that once the scope ends,
 		// the lifetime of the object should end, instead of waiting for garbage collection.
@@ -91,6 +92,10 @@ public class ImageController : ControllerBase
 		if (kernelRadius % 2 == 0)
 		{
 			return BadRequest("Invalid kernelRadius; must be odd integer.");
+		}
+		if (kernelRadius > 13)
+		{
+			return BadRequest("Invalid kernel radius; must be 13 or less.");
 		}
 
 		using Stream s = image.OpenReadStream();
