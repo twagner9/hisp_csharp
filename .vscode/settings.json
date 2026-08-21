@@ -20,5 +20,12 @@
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.tabSize": 4,
     "editor.formatOnSave": true
-  },
+},
+	"cmake.sourceDirectory": "${workspaceFolder}/backend/HISP",
+	"[c]": {
+		"editor.formatOnSave": true,
+		"editor.tabSize": 4,
+		"editor.defaultFormatter": "ms-vscode.cpptools"
+	}
+
 }
