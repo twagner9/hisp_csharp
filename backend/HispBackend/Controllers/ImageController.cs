@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HispBackend.Services;
+using System.Runtime.InteropServices;
 
 namespace HispBackend.Controllers;
 
@@ -12,12 +13,6 @@ public class ImageController : ControllerBase
 	public ImageController(ImageProcessingService imageProcessingService)
 	{
 		_imageProcessingService = imageProcessingService;
-	}
-
-	[HttpGet]
-	public IActionResult Test()
-	{
-		return Ok("Image API is working");
 	}
 
 	[HttpPost("process")]
@@ -102,4 +97,11 @@ public class ImageController : ControllerBase
 		byte[] res = _imageProcessingService.GaussianBlur(s, kernelRadius, sigma);
 		return File(res, "image/png");
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	/// START FUNCTIONS LINKING TO C++ API
+	//////////////////////////////////////////////////////////////////////////////////
+
+	[DllImport("HISPImageProcessing")]
+	private static extern int image_grayscale(byte[] input, byte[] output, int width, int height);
 }

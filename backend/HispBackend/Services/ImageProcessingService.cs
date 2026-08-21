@@ -7,13 +7,17 @@ using System.Runtime.InteropServices;
 
 public class ImageProcessingService
 {
-	private readonly IWebHostEnvironment _environment;
+	private readonly IWebHostEnvironment? _environment;
 	private static string? DEVEL_IMG_PATH;
 
 	public ImageProcessingService(IWebHostEnvironment env)
 	{
 		_environment = env;
 		DEVEL_IMG_PATH = Path.Combine(_environment.ContentRootPath, "TestData", "tuck_tuck.jpg");
+	}
+
+	public ImageProcessingService()
+	{
 	}
 
 	public void Process(Stream imageStream)
