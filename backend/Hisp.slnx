@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="HispBackend.Tests/HispBackend.Tests.csproj" />
+  <Project Path="HispBackend/HispBackend.csproj" />
+</Solution>
