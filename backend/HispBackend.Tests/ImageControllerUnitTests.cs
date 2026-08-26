@@ -96,6 +96,7 @@ public class ImageControllerUnitTests
 		Assert.Equal("Sigma value must be 0.0 or greater.", badRequest.Value);
 	}
 
+	// TODO: move this to its own source file; this is testing the ImageProcessingService output, not the ImageController
 	[Fact]
 	public void Process_ValidInput_ReturnsValidResult()
 	{
@@ -112,13 +113,15 @@ public class ImageControllerUnitTests
 
 		byte[] pixels = GenerateTestImg(imgSize);
 		Stream s = new MemoryStream(pixels);
-		var testImg = new FormFile(s, 0, imgSize * imgSize * numChannels, "image", "test.png");
+		var testImg = new FormFile(s, 0, s.Length, "image", "test.png");
 
 
 		///////////////////// 1. Simple blur
 		var result = controller.SimpleBlur(testImg, 1);
 		var fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		byte[] pixelResults = fileResult.FileContents;
+		var resultStream = new MemoryStream(fileResult.FileContents);
+		var resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		byte[] pixelResults = resImg.Data;
 
 		// a. test first pixel (0, 0)
 		var expectedRgb = (rValue: 35, gValue: 33, bValue: 36);
@@ -130,14 +133,15 @@ public class ImageControllerUnitTests
 		Assert.Equal(expectedRgb, actual);
 
 		// c. test central pixel (2, 2) in this case
-		int testIdx = imgSize / 2 * imgSize + imgSize / 2;
-		expectedRgb = (106, 102, 111);
+		const int center = imgSize / 2;
+		int testIdx = (center * imgSize + center) * 3;
+		expectedRgb = (rValue: 106, gValue: 102, bValue: 111);
 		actual = (rValue: pixelResults[testIdx], gValue: pixelResults[testIdx + 1], bValue: pixelResults[testIdx + 2]);
 		Assert.Equal(expectedRgb, actual);
 
 		// d. test random intermediate pixel (1, 1)
-		testIdx = imgSize + 1;
-		expectedRgb = (37, 36, 39);
+		testIdx = (imgSize + 1) * 3;
+		expectedRgb = (rValue: 37, gValue: 36, bValue: 39);
 		actual = (rValue: pixelResults[testIdx], gValue: pixelResults[testIdx + 1], bValue: pixelResults[testIdx + 2]);
 		Assert.Equal(expectedRgb, actual);
 
@@ -152,7 +156,9 @@ public class ImageControllerUnitTests
 		s.Position = 0;
 		result = controller.Grayscale(testImg);
 		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		pixelResults = fileResult.FileContents;
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
 
 
 		// a. Test first pixel
@@ -167,13 +173,13 @@ public class ImageControllerUnitTests
 
 		// c. Test central pixel
 		expectedAvg = 0;
-		testIdx = imgSize / 2 * imgSize + imgSize / 2;
+		testIdx = center * imgSize + center;
 		actualAvg = pixelResults[testIdx];
 		Assert.Equal(expectedAvg, actualAvg);
 
 		// d. Test (1,1)
 		expectedAvg = 140;
-		testIdx = imgSize + 1;
+		testIdx = (imgSize + 1) * 3;
 		actualAvg = pixelResults[testIdx];
 		Assert.Equal(expectedAvg, actualAvg);
 
@@ -212,6 +218,21 @@ public class ImageControllerUnitTests
 				res[idx + 2] = valueB;
 			}
 		}
+
+		Console.WriteLine("Grid values:");
+		for (int i = 0; i < res.Length; i += 3)
+		{
+			if (i % imgSize == 0) Console.WriteLine();
+			Console.Write($"[{res[i]}, {res[i + 1]}, {res[i + 2]}]");
+		}
+		Console.WriteLine();
+
+		int tmpIdx = (imgSize + 1) * numChannels;
+		Console.WriteLine(
+			$"Generated (1,1): " +
+			$"R={res[tmpIdx]}, " +
+			$"G={res[tmpIdx + 1]}, " +
+			$"B={res[tmpIdx + 2]}");
 
 		return EncodePng(res, imgSize, imgSize);
 	}
