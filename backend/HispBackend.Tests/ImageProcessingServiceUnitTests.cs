@@ -58,7 +58,43 @@ public class ImageProcessingServiceUnitTests
 
 		///////////////////// 2. Gaussian blur
 		s.Position = 0;
-		result = controller.GaussianBlur(testImg, 7, 5.5);
+		result = controller.GaussianBlur(testImg, 3, 5.5);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+
+		// Create Gaussian kernel:
+		const int kernelRadius = 3;
+		const int size = kernelRadius * 2 + 1;
+		const double sigma = 5.5;
+		double sum = 0;
+		double[] testWeights = new double[size * size];
+		for (int y = -kernelRadius; y <= kernelRadius; y++)
+		{
+			for (int x = -kernelRadius; x <= kernelRadius; x++)
+			{
+				int idx = (y + kernelRadius) * size + x + kernelRadius;
+				double r2 = x * x + y * y;
+				double w = Math.Exp(-r2 / (2 * (sigma * sigma)));
+				// Formula: 1 / (2 * pi * sigma^2) * e^-((x^2 + y^2) / (2 * sigma^2))
+				testWeights[idx] = w;
+				sum += w;
+			}
+		}
+
+		// a. Test 0,0
+		for (int y = -kernelRadius; y < kernelRadius; y++)
+		{
+			for (int x = -kernelRadius; x < kernelRadius; x++)
+			{
+				if (x >= 0 && y >= 0 && x < imgSize && y < imgSize)
+				{
+
+				}
+
+			}
+		}
+		// b. Test 4,4
+		// c. Test 2,2
+		// d. Test 1,1
 		// successfulResult = Assert.IsType<IActionResult>(result, exactMatch: false);
 
 
