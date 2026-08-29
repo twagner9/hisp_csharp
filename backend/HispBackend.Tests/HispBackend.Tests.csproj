@@ -29,6 +29,9 @@
     <Content Include="TestData/gaussian_tiny_flowers.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="../../build/libHISPImageProcessing.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

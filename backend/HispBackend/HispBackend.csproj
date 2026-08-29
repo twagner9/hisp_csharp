@@ -13,6 +13,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
+    <None Include="../../build/libHISPImageProcessing.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
