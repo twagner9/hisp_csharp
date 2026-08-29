@@ -191,9 +191,9 @@ public class ImageProcessingService
 					}
 				}
 
-				int outR = (int)(pixelSumR / weightSum);
-				int outG = (int)(pixelSumG / weightSum);
-				int outB = (int)(pixelSumB / weightSum);
+				int outR = (int)Math.Ceiling(pixelSumR / weightSum);
+				int outG = (int)Math.Ceiling(pixelSumG / weightSum);
+				int outB = (int)Math.Ceiling(pixelSumB / weightSum);
 
 				dst[centralIdx] = (byte)outR;
 				dst[centralIdx + 1] = (byte)outG;

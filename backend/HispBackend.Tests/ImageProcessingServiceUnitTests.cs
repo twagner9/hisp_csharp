@@ -5,8 +5,17 @@ using Microsoft.AspNetCore.Http;
 using StbImageSharp;
 using StbImageWriteSharp;
 using Xunit;
+using Xunit.Abstractions;
+
 public class ImageProcessingServiceUnitTests
 {
+	public ITestOutputHelper output;
+
+	public ImageProcessingServiceUnitTests(ITestOutputHelper output)
+	{
+		this.output = output;
+	}
+
 	[Fact]
 	public void Process_ValidInput_ReturnsValidResult()
 	{
@@ -57,46 +66,33 @@ public class ImageProcessingServiceUnitTests
 
 
 		///////////////////// 2. Gaussian blur
-		s.Position = 0;
-		result = controller.GaussianBlur(testImg, 3, 5.5);
+		// TODO: instead of testing this in this manner, write a Python script that will apply Gaussian blur to the test image
+		// I already include, and then compare the result of this operation to that one; they should be similar.
+		var filePath = Path.Combine(AppContext.BaseDirectory, "TestData", "gaussian_tiny_flowers.jpg");
+		using var expectedStream = File.OpenRead(filePath);
+		ImageResult expectedImg = ImageResult.FromStream(expectedStream);
+		byte[] expectedData = expectedImg.Data;
+
+		filePath = Path.Combine(AppContext.BaseDirectory, "TestData", "tiny_flowers.jpg");
+		using var stream = File.OpenRead(filePath);
+		var loadedTestImg = new FormFile(stream, 0, stream.Length, "image", "tiny_flowers.jpg");
+		result = controller.GaussianBlur(loadedTestImg, 1, 5);
 		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream);
+		pixelResults = resImg.Data;
 
-		// Create Gaussian kernel:
-		const int kernelRadius = 3;
-		const int size = kernelRadius * 2 + 1;
-		const double sigma = 5.5;
-		double sum = 0;
-		double[] testWeights = new double[size * size];
-		for (int y = -kernelRadius; y <= kernelRadius; y++)
-		{
-			for (int x = -kernelRadius; x <= kernelRadius; x++)
-			{
-				int idx = (y + kernelRadius) * size + x + kernelRadius;
-				double r2 = x * x + y * y;
-				double w = Math.Exp(-r2 / (2 * (sigma * sigma)));
-				// Formula: 1 / (2 * pi * sigma^2) * e^-((x^2 + y^2) / (2 * sigma^2))
-				testWeights[idx] = w;
-				sum += w;
-			}
-		}
+		// a. Test first pixel
+		Assert.Equal((expectedData[0], expectedData[1], expectedData[2]), (pixelResults[0], pixelResults[1], pixelResults[2]));
 
-		// a. Test 0,0
-		for (int y = -kernelRadius; y < kernelRadius; y++)
-		{
-			for (int x = -kernelRadius; x < kernelRadius; x++)
-			{
-				if (x >= 0 && y >= 0 && x < imgSize && y < imgSize)
-				{
+		// b. Test final pixel
+		Assert.Equal((expectedData[^3], expectedData[^2], expectedData[^1]), (pixelResults[^3], pixelResults[^2], pixelResults[^1]));
 
-				}
+		// c. Test center (image size 125x125 -- center == 62 * 3 = 186)
+		Assert.Equal((expectedData[186], expectedData[187], expectedData[188]), (pixelResults[186], pixelResults[187], pixelResults[188]));
 
-			}
-		}
-		// b. Test 4,4
-		// c. Test 2,2
-		// d. Test 1,1
-		// successfulResult = Assert.IsType<IActionResult>(result, exactMatch: false);
-
+		// d. Test random pixel (75; 75 * 3 == 225)
+		Assert.Equal((expectedData[225], expectedData[226], expectedData[227]), (pixelResults[225], pixelResults[226], pixelResults[227]));
 
 		///////////////////// 3. Grayscale
 		s.Position = 0;
