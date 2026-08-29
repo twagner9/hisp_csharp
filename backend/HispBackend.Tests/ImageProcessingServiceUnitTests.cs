@@ -161,8 +161,6 @@ public class ImageProcessingServiceUnitTests
 			}
 		}
 
-		int tmpIdx = (imgSize + 1) * numChannels;
-
 		return EncodePng(res, imgSize, imgSize);
 	}
 
