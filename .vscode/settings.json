@@ -2,7 +2,7 @@
   "dotnet.defaultSolution": "HISP.slnx",
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.suggestSelection": "recentlyUsedByPrefix",
-  "editor.fontSize": 12,
+  "editor.fontSize": 14,
   "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
   "editor.formatOnSave": true,
   "[typescript]": {
