@@ -58,17 +58,9 @@ public partial class ImageProcessingService
 		int width = img.Width;
 		int height = img.Height;
 
-		Console.WriteLine($"width: {width}; height: {height}");
-
 		byte[] output = new byte[width * height * 3];
-		Console.WriteLine($"Input length: {img.Data.Length}");
-		Console.WriteLine($"First RGB before call img.Data array: {img.Data[0]}, {img.Data[1]}, {img.Data[2]}");
-		Console.WriteLine($"(1, 1) values: {img.Data[18]}, {img.Data[19]}, {img.Data[20]}");
 		int result = image_blur(img.Data, output, width, height, kernelRadius);
-		Console.WriteLine($"Native result: {result}");
-		Console.WriteLine($"First RGB after call (output array): {output[0]}, {output[1]}, {output[2]}");
-		Console.WriteLine($"Output (1, 1) values: {output[18]}, {output[19]}, {output[20]}");
-		Console.WriteLine($"Output length: {output.Length}");
+		int centralIdx = ((2 * width) + 2) * 3;
 		if (result != 0)
 		{
 			throw new InvalidOperationException($"Native blur failed with error code {result}");
