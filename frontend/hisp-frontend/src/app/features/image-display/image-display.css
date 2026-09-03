@@ -1,4 +1,33 @@
-#originalImage {
-	max-height: fit-content;
-	max-width: fit-content;
+.imageContainer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.imageArea {
+    width: 40%;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imageArea img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.arrowArea {
+    width: 10%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.arrowArea p {
+    margin: 0;
 }

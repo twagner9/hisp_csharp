@@ -1,9 +1,14 @@
-<div class="originalImageArea">
-  <img #originalImage [src]="displaySvc.uploadedImg()" />
-</div>
-
-@if (displaySvc.mostRecentlyProcessedImg()) {
-  <div class="processedImageArea">
-    <img #processedImage [src]="displaySvc.mostRecentlyProcessedImg()" />
+<div class="imageContainer">
+  <div class="imageArea">
+    <img #originalImage [src]="displaySvc.uploadedImg()" />
   </div>
-}
+
+  <div class="arrowArea">
+    <p>-></p>
+  </div>
+  <div class="imageArea">
+    @if (displaySvc.mostRecentlyProcessedImg()) {
+      <img #processedImage [src]="displaySvc.mostRecentlyProcessedImg()" />
+    }
+  </div>
+</div>
