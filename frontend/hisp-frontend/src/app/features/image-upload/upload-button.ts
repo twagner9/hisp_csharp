@@ -6,6 +6,7 @@ import { DisplayService } from '../../core/services/display.service';
 @Component({
   selector: 'upload-button',
   templateUrl: 'upload-button.html',
+  styleUrl: 'upload-button.css',
 })
 export class UploadButton {
   fileContent: string = '';

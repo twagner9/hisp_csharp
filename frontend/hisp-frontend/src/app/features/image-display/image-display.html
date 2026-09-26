@@ -3,12 +3,12 @@
     <img #originalImage [src]="displaySvc.uploadedImg()" />
   </div>
 
-  <div class="arrowArea">
-    <p>-></p>
-  </div>
-  <div class="imageArea">
-    @if (displaySvc.mostRecentlyProcessedImg()) {
+  @if (displaySvc.mostRecentlyProcessedImg()) {
+    <div class="arrowArea">
+      <p>-></p>
+    </div>
+    <div class="imageArea">
       <img #processedImage [src]="displaySvc.mostRecentlyProcessedImg()" />
-    }
-  </div>
+    </div>
+  }
 </div>

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'process-selection',
   templateUrl: 'process-selection.html',
+  styleUrl: 'process-selection.css',
   standalone: true,
   imports: [FormsModule],
 })
@@ -44,7 +45,6 @@ export class ProcessSelection {
 
   updateSelectedOp(event: Event) {
     const select = event.target as HTMLSelectElement;
-    console.log('Selected value:', select.value);
     this.svc.userSelectedProcess.set(select.value);
   }
 
