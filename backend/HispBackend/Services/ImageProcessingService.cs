@@ -29,6 +29,9 @@ public partial class ImageProcessingService
 	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
 	private static partial int image_grayscale([In] byte[] input, [Out] byte[] output, int width, int height);
 
+	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	private static partial int image_adjust_brightness([In] byte[] input, [Out] byte[] output, int width, int height, int interval);
+
 	public void Process(Stream imageStream)
 	{
 		ImageResult image = ImageResult.FromStream(imageStream, StbImageSharp.ColorComponents.RedGreenBlueAlpha);
@@ -38,17 +41,6 @@ public partial class ImageProcessingService
 		Console.WriteLine("Image height: " + image.Height);
 		Console.WriteLine("Image type: " + image.GetType());
 		Console.WriteLine("Image name: " + image.ToString());
-
-		// byte[] bytes = File.ReadAllBytes(DEVEL_IMG_PATH);
-
-
-		// for (int y = 0; y < image.Height; y++)
-		// {
-		// 	for (int x = 0; x < image.Width; x++)
-		// 	{
-
-		// 	}	
-		// }	
 	}
 
 	public byte[] SimpleBlur(Stream imageStream, int kernelRadius)
@@ -58,6 +50,12 @@ public partial class ImageProcessingService
 		int width = img.Width;
 		int height = img.Height;
 
+		Console.WriteLine($"Image width: {width}");
+		Console.WriteLine($"Image height: {height}");
+		Console.WriteLine(
+			$"Decoded pixel: {img.Data[0]}, {img.Data[1]}, {img.Data[2]}"
+		);
+
 		byte[] output = new byte[width * height * 3];
 		int result = image_blur(img.Data, output, width, height, kernelRadius);
 		int centralIdx = ((2 * width) + 2) * 3;
@@ -66,67 +64,7 @@ public partial class ImageProcessingService
 			throw new InvalidOperationException($"Native blur failed with error code {result}");
 		}
 
-		using var outputStream = new MemoryStream();
-		var writer = new ImageWriter();
-		writer.WritePng(output, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
-
-		return outputStream.ToArray();
-
-		// byte[] src = img.Data;
-		// byte[] dst = new byte[src.Length];
-
-		// const int RGB_OFFSET = 3;
-		// for (int y = 0; y < img.Height; y++)
-		// {
-		// 	for (int x = 0; x < img.Width; x++)
-		// 	{
-		// 		long centralIdx = (y * img.Width + x) * RGB_OFFSET;
-		// 		int pixelSumR = 0;
-		// 		int pixelSumG = 0;
-		// 		int pixelSumB = 0;
-		// 		int addedPixels = 0;
-		// 		for (int kernelRow = -kernelRadius; kernelRow <= kernelRadius; kernelRow++)
-		// 		{
-		// 			for (int kernelCol = -kernelRadius; kernelCol <= kernelRadius; kernelCol++)
-		// 			{
-		// 				if (x + kernelCol < 0 || x + kernelCol >= img.Width || y + kernelRow < 0 || y + kernelRow >= img.Height)
-		// 				{
-		// 					continue;
-		// 				}
-		// 				long kernelIdx = ((y + kernelRow) * img.Width + x + kernelCol) * RGB_OFFSET;
-		// 				pixelSumR += img.Data[kernelIdx];
-		// 				pixelSumG += img.Data[kernelIdx + 1];
-		// 				pixelSumB += img.Data[kernelIdx + 2];
-		// 				++addedPixels;
-		// 			}
-		// 		}
-
-		// 		int avgR = pixelSumR;
-		// 		int avgG = pixelSumG;
-		// 		int avgB = pixelSumB;
-
-		// 		// addPixels could be 0 if the surrounding pixels all happen to be 0
-		// 		if (addedPixels > 0)
-		// 		{
-		// 			avgR /= addedPixels;
-		// 			avgG /= addedPixels;
-		// 			avgB /= addedPixels;
-		// 		}
-
-		// 		dst[centralIdx] = (byte)avgR;
-		// 		dst[centralIdx + 1] = (byte)avgG;
-		// 		dst[centralIdx + 2] = (byte)avgB;
-		// 	}
-		// }
-
-		// // dst is a byte[], but it lacks the formatting required to return an appropriate file
-		// // from controller to the frontend. Use StbImageWriteSharp to add this necessary data,
-		// // and return this instead.
-		// var writer = new ImageWriter();
-		// var outputStream = new MemoryStream();
-		// writer.WritePng(dst, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
-
-		// return outputStream.ToArray();
+		return WriteFile(output, img.Width, img.Height);
 	}
 
 	public byte[] ConvertToGrayscale(Stream imageStream)
@@ -143,13 +81,7 @@ public partial class ImageProcessingService
 			throw new InvalidOperationException($"Native blur failed with error code {result}");
 		}
 
-		using var outputStream = new MemoryStream();
-		var writer = new ImageWriter();
-		writer.WritePng(output, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
-
-		return outputStream.ToArray();
-
-		// ImageResult img = ImageResult.FromStream(imageStream);
+		return WriteFile(output, img.Width, img.Height);
 		// byte[] imgPixels = img.Data;
 		// byte[] dst = new byte[imgPixels.Length];
 
@@ -186,86 +118,33 @@ public partial class ImageProcessingService
 			throw new InvalidOperationException($"Native blur failed with error code {result}");
 		}
 
+		return WriteFile(output, img.Width, img.Height);
+	}
+
+	public byte[] AdjustBrightness(Stream imageStream, int interval)
+	{
+		ImageResult img = ImageResult.FromStream(imageStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		int width = img.Width;
+		int height = img.Height;
+
+		byte[] data = img.Data;
+
+		byte[] output = new byte[width * height * 3];
+		int result = image_adjust_brightness(img.Data, output, width, height, interval);
+		if (result != 0)
+		{
+			throw new InvalidOperationException($"Brightness adjustment failed with error code {result}");
+		}
+
+		return WriteFile(output, img.Width, img.Height);
+	}
+
+	private static byte[] WriteFile(byte[] output, int width, int height)
+	{
 		using var outputStream = new MemoryStream();
 		var writer = new ImageWriter();
-		writer.WritePng(output, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
+		writer.WritePng(output, width, height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
 
 		return outputStream.ToArray();
-
-		// ImageResult img = ImageResult.FromStream(s);
-		// byte[] pixelData = img.Data;
-		// byte[] dst = new byte[pixelData.Length];
-
-		// // First set up the Guassian weights:
-		// double sum = 0;
-		// int size = 2 * kernelRadius + 1;
-
-		// // Number of weights is NOT equivalent to the size of the kernel; it's
-		// // size^2 because size is merely the dimensions of the kernel. The
-		// // actual kernel positions are then dim * dim, or size * size in this
-		// // case, and must all be filled in.
-		// double[] weights = new double[size * size];
-		// for (int y = -kernelRadius; y <= kernelRadius; y++)
-		// {
-		// 	for (int x = -kernelRadius; x <= kernelRadius; x++)
-		// 	{
-		// 		int idx = (y + kernelRadius) * size + x + kernelRadius;
-		// 		double r2 = x * x + y * y;
-		// 		double w = Math.Exp(-r2 / (2 * (sigma * sigma)));
-		// 		// Formula: 1 / (2 * pi * sigma^2) * e^-((x^2 + y^2) / (2 * sigma^2))
-		// 		weights[idx] = w;
-		// 		sum += w;
-		// 	}
-		// }
-
-		// for (int i = 0; i < weights.Length; i++)
-		// {
-		// 	weights[i] /= sum;
-		// }
-
-		// const int RGB_OFFSET = 3;
-		// for (int y = 0; y < img.Height; y++)
-		// {
-		// 	for (int x = 0; x < img.Width; x++)
-		// 	{
-		// 		long centralIdx = (y * img.Width + x) * RGB_OFFSET;
-		// 		double pixelSumR = 0;
-		// 		double pixelSumG = 0;
-		// 		double pixelSumB = 0;
-		// 		double weightSum = 0;
-		// 		for (int kernelRow = -kernelRadius; kernelRow <= kernelRadius; kernelRow++)
-		// 		{
-		// 			for (int kernelCol = -kernelRadius; kernelCol <= kernelRadius; kernelCol++)
-		// 			{
-		// 				if (x + kernelCol < 0 || x + kernelCol >= img.Width || y + kernelRow < 0 || y + kernelRow >= img.Height)
-		// 				{
-		// 					continue;
-		// 				}
-
-		// 				long kernelIdx = ((y + kernelRow) * img.Width + x + kernelCol) * RGB_OFFSET;
-		// 				int weightIdx = (kernelRow + kernelRadius) * size + kernelCol + kernelRadius;
-		// 				double w = weights[weightIdx];
-
-		// 				pixelSumR += img.Data[kernelIdx] * w;
-		// 				pixelSumG += img.Data[kernelIdx + 1] * w;
-		// 				pixelSumB += img.Data[kernelIdx + 2] * w;
-		// 				weightSum += w;
-		// 			}
-		// 		}
-
-		// 		int outR = (int)Math.Ceiling(pixelSumR / weightSum);
-		// 		int outG = (int)Math.Ceiling(pixelSumG / weightSum);
-		// 		int outB = (int)Math.Ceiling(pixelSumB / weightSum);
-
-		// 		dst[centralIdx] = (byte)outR;
-		// 		dst[centralIdx + 1] = (byte)outG;
-		// 		dst[centralIdx + 2] = (byte)outB;
-		// 	}
-		// }
-
-		// var writer = new ImageWriter();
-		// var outputStream = new MemoryStream();
-		// writer.WritePng(dst, img.Width, img.Height, StbImageWriteSharp.ColorComponents.RedGreenBlue, outputStream);
-		// return outputStream.ToArray();
 	}
 }

@@ -103,4 +103,25 @@ public class ImageController : ControllerBase
 		byte[] res = _imageProcessingService.GaussianBlur(s, kernelRadius, sigma);
 		return File(res, "image/png");
 	}
+
+	[HttpPost("process/adj_brightness")]
+	public IActionResult AdjustBrightness([FromForm] IFormFile image, [FromForm] int interval)
+	{
+		if (image == null || image.Length == 0)
+		{
+			return BadRequest("Invalid image provided.");
+		}
+		if (interval < -255)
+		{
+			return BadRequest("Interval must be greater than -255");
+		}
+		if (interval > 255)
+		{
+			return BadRequest("Interval must be less than 255");
+		}
+
+		using Stream s = image.OpenReadStream();
+		byte[] res = _imageProcessingService.AdjustBrightness(s, interval);
+		return File(res, "image/png");
+	}
 }

@@ -35,7 +35,7 @@ public class ImageProcessingServiceUnitTests
 		Stream s = new MemoryStream(pixels);
 		var testImg = new FormFile(s, 0, s.Length, "image", "test.png");
 
-		///////////////////// 1. Simple blur
+		///////////////////// 1. Simple blur //////////////////////////////////////////////////////////////////////////////////////
 		var result = controller.SimpleBlur(testImg, 1);
 		var fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
 		var resultStream = new MemoryStream(fileResult.FileContents);
@@ -65,7 +65,7 @@ public class ImageProcessingServiceUnitTests
 		Assert.Equal(expectedRgb, actual);
 
 
-		///////////////////// 2. Gaussian blur
+		///////////////////// 2. Gaussian blur //////////////////////////////////////////////////////////////////////////////////////
 		// TODO: instead of testing this in this manner, write a Python script that will apply Gaussian blur to the test image
 		// I already include, and then compare the result of this operation to that one; they should be similar.
 		var filePath = Path.Combine(AppContext.BaseDirectory, "TestData", "gaussian_tiny_flowers.jpg");
@@ -94,7 +94,7 @@ public class ImageProcessingServiceUnitTests
 		// d. Test random pixel (75; 75 * 3 == 225)
 		Assert.Equal((expectedData[225], expectedData[226], expectedData[227]), (pixelResults[225], pixelResults[226], pixelResults[227]));
 
-		///////////////////// 3. Grayscale
+		///////////////////// 3. Grayscale //////////////////////////////////////////////////////////////////////////////////////
 		s.Position = 0;
 		result = controller.Grayscale(testImg);
 		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
@@ -126,6 +126,74 @@ public class ImageProcessingServiceUnitTests
 		Assert.Equal(expectedAvg, actualAvg);
 
 		// successfulResult = Assert.IsType<IActionResult>(result, exactMatch: false);
+
+		// 4. Adjust image brightness //////////////////////////////////////////////////////////////////////////////////////
+		// a. Adjust by 1
+		stream.Position = 0;
+		byte[] originalData = ImageResult.FromStream(stream).Data;
+		int interval = 1;
+
+		result = controller.AdjustBrightness(loadedTestImg, interval);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
+
+		var expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
+		var actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
+		Assert.Equal(expectedPixelVals, actualPixelVals);
+
+		// b. Adjust by 50
+		interval = 50;
+		result = controller.AdjustBrightness(loadedTestImg, interval);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
+
+		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
+		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
+		Assert.Equal(expectedPixelVals, actualPixelVals);
+
+		// c. Adjust by -50
+		interval = -50;
+		result = controller.AdjustBrightness(loadedTestImg, interval);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
+
+		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
+		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
+		Assert.Equal(expectedPixelVals, actualPixelVals);
+
+		// d. Adjust by 255
+		interval = 255;
+		result = controller.AdjustBrightness(loadedTestImg, interval);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
+
+		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
+		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
+		Assert.Equal(expectedPixelVals, actualPixelVals);
+
+		// e. Adjust by -255
+		interval = -255;
+		result = controller.AdjustBrightness(loadedTestImg, interval);
+		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
+		resultStream = new MemoryStream(fileResult.FileContents);
+		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		pixelResults = resImg.Data;
+
+		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
+		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
+		Assert.Equal(expectedPixelVals, actualPixelVals);
+
+		// TODO: for AdjustBrightness function, test the following; should be placed in its own function
+		// f. Test interval too big
+		// g. Test interval too small
 	}
 
 	private static byte[] GenerateTestImg(int imgSize)
