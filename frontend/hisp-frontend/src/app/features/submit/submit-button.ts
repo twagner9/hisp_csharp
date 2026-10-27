@@ -41,6 +41,8 @@ export class SubmitButton {
       if (this.selectionSvc.userSelectedProcess() === 'gblur') {
         formData?.append('sigma', this.selectionSvc.sigmaVal().toString());
       }
+    } else {
+      formData?.append('delta', this.selectionSvc.deltaVal().toString());
     }
 
     console.log([...formData!.entries()]);

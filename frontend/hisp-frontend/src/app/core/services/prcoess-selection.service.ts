@@ -8,4 +8,5 @@ export class SelectedOpService {
   readonly imageUploaded = signal<boolean>(false);
   readonly kernelVal = signal<string>('3');
   readonly sigmaVal = signal<string>('0.5');
+  readonly deltaVal = signal<string>('25');
 }

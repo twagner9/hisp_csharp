@@ -14,15 +14,18 @@ export class ProcessSelection {
     { value: 'blur', label: 'Simple Blur' },
     { value: 'gblur', label: 'Gaussian Blur' },
     { value: 'grayscale', label: 'Grayscale' },
+    { value: 'adj_brightness', label: 'Adjust Brightness' },
   ];
 
   // TODO: add user input for getting the kernel size; use boolean
   // based on the current selection (blur, grayscale, etc).
   needRadius = signal<boolean>(true);
   needSigma = signal<boolean>(false);
+  needDelta = signal<boolean>(false);
 
   @ViewChild('sigmaInput') sigmaInput!: ElementRef<HTMLInputElement>;
   @ViewChild('radiusInput') radiusInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('deltaInput') deltaInput: ElementRef<HTMLInputElement> | undefined;
 
   constructor(public svc: SelectedOpService) {
     effect(() => {
@@ -30,15 +33,23 @@ export class ProcessSelection {
       if (process === 'blur') {
         this.needRadius.set(true);
         this.needSigma.set(false);
+        this.needDelta.set(false);
       } else if (process === 'gblur') {
         this.needRadius.set(true);
         this.needSigma.set(true);
+        this.needDelta.set(false);
       } else if (process === 'gray') {
+        this.needRadius.set(false);
+        this.needSigma.set(false);
+        this.needDelta.set(false);
+      } else if (process == 'adj_brightness') {
+        this.needDelta.set(true);
         this.needRadius.set(false);
         this.needSigma.set(false);
       } else {
         this.needRadius.set(false);
         this.needSigma.set(false);
+        this.needDelta.set(false);
       }
     });
   }
@@ -56,5 +67,10 @@ export class ProcessSelection {
   updateSigma(event: Event) {
     const sigmaInput = event.target as HTMLInputElement;
     this.svc.sigmaVal.set(sigmaInput.value);
+  }
+
+  updateDelta(event: Event) {
+    const deltaInput = event.target as HTMLInputElement;
+    this.svc.deltaVal.set(deltaInput.value);
   }
 }

@@ -29,4 +29,15 @@
       (change)="updateSigma($event)"
     />
   </div>
+  <div class="additionalData" [class.hidden]="!needDelta()">
+    <label>Delta value: </label>
+    <input
+      type="number"
+      max="255"
+      min="-255"
+      step="1"
+      [value]="svc.deltaVal()"
+      (change)="updateDelta($event)"
+    />
+  </div>
 </div>
