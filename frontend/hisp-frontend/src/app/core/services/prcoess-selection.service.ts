@@ -9,4 +9,5 @@ export class SelectedOpService {
   readonly kernelVal = signal<string>('3');
   readonly sigmaVal = signal<string>('0.5');
   readonly deltaVal = signal<string>('25');
+  readonly thresholdVal = signal<string>('125');
 }

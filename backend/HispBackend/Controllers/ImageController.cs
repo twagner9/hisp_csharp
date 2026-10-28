@@ -124,4 +124,25 @@ public class ImageController : ControllerBase
         byte[] res = _imageProcessingService.AdjustBrightness(s, delta);
         return File(res, "image/png");
     }
+
+    [HttpPost("process/simple_threshold")]
+    public IActionResult SimpleThreshold([FromForm] IFormFile image, [FromForm] int threshold)
+    {
+        if (image == null || image.Length == 0)
+        {
+            return BadRequest("Invalid image provided.");
+        }
+        if (threshold < 0)
+        {
+            return BadRequest("Interval must be greater than or equal to 0");
+        }
+        if (threshold > 255)
+        {
+            return BadRequest("Interval must be less than or equal to 255");
+        }
+
+        using Stream s = image.OpenReadStream();
+        byte[] res = _imageProcessingService.SimpleThreshold(s, threshold);
+        return File(res, "image/png");
+    }
 }

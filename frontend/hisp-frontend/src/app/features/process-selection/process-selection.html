@@ -40,4 +40,15 @@
       (change)="updateDelta($event)"
     />
   </div>
+  <div class="additionalData" [class.hidden]="!needThreshold()">
+    <label>Threshold value: </label>
+    <input
+      type="number"
+      max="255"
+      min="-255"
+      step="1"
+      [value]="svc.thresholdVal()"
+      (change)="updateThreshold($event)"
+    />
+  </div>
 </div>
