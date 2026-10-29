@@ -37,10 +37,7 @@ public class ImageProcessingServiceUnitTests
 
 		///////////////////// 1. Simple blur //////////////////////////////////////////////////////////////////////////////////////
 		var result = controller.SimpleBlur(testImg, 1);
-		var fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		var resultStream = new MemoryStream(fileResult.FileContents);
-		var resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		byte[] pixelResults = resImg.Data;
+		byte[] pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		// a. test first pixel (0, 0)
 		var expectedRgb = (rValue: 35, gValue: 34, bValue: 37);
@@ -77,10 +74,7 @@ public class ImageProcessingServiceUnitTests
 		using var stream = File.OpenRead(filePath);
 		var loadedTestImg = new FormFile(stream, 0, stream.Length, "image", "tiny_flowers.jpg");
 		result = controller.GaussianBlur(loadedTestImg, 1, 5);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		// a. Test first pixel
 		Assert.Equal((expectedData[0], expectedData[1], expectedData[2]), (pixelResults[0], pixelResults[1], pixelResults[2]));
@@ -97,10 +91,7 @@ public class ImageProcessingServiceUnitTests
 		///////////////////// 3. Grayscale //////////////////////////////////////////////////////////////////////////////////////
 		s.Position = 0;
 		result = controller.Grayscale(testImg);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 
 		// a. Test first pixel
@@ -134,10 +125,7 @@ public class ImageProcessingServiceUnitTests
 		int interval = 1;
 
 		result = controller.AdjustBrightness(loadedTestImg, interval);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		var expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
 		var actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
@@ -146,10 +134,7 @@ public class ImageProcessingServiceUnitTests
 		// b. Adjust by 50
 		interval = 50;
 		result = controller.AdjustBrightness(loadedTestImg, interval);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
 		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
@@ -158,10 +143,7 @@ public class ImageProcessingServiceUnitTests
 		// c. Adjust by -50
 		interval = -50;
 		result = controller.AdjustBrightness(loadedTestImg, interval);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
 		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
@@ -170,10 +152,7 @@ public class ImageProcessingServiceUnitTests
 		// d. Adjust by 255
 		interval = 255;
 		result = controller.AdjustBrightness(loadedTestImg, interval);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
 		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
@@ -182,10 +161,7 @@ public class ImageProcessingServiceUnitTests
 		// e. Adjust by -255
 		interval = -255;
 		result = controller.AdjustBrightness(loadedTestImg, interval);
-		fileResult = Assert.IsType<FileContentResult>(result, exactMatch: false);
-		resultStream = new MemoryStream(fileResult.FileContents);
-		resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
-		pixelResults = resImg.Data;
+		pixelResults = ReturnByteArrayFromIActionResult(result);
 
 		expectedPixelVals = (Math.Clamp(originalData[0] + interval, 0, 255), Math.Clamp(originalData[1] + interval, 0, 255), Math.Clamp(originalData[2] + interval, 0, 255));
 		actualPixelVals = (pixelResults[0], pixelResults[1], pixelResults[2]);
@@ -194,6 +170,84 @@ public class ImageProcessingServiceUnitTests
 		// TODO: for AdjustBrightness function, test the following; should be placed in its own function
 		// f. Test interval too big
 		// g. Test interval too small
+	}
+
+	[Fact]
+	public void TestSimpleThreshold()
+	{
+		ImageProcessingService ips = new();
+		ImageController controller = new(ips);
+		// First just write the tests
+		// 3x3 image will be 3x3x3 for the 3 color channels, so 27 pixel vals
+		byte[] input = new byte[27];
+
+		// Do RGB
+		for (int i = 0; i < 5; i++)
+		{
+			input[i * 3] = 50;
+			input[i * 3 + 1] = 50;
+			input[i * 3 + 2] = 50;
+		}
+		for (int i = 5; i < 9; i++)
+		{
+			input[i * 3] = 175;
+			input[i * 3 + 1] = 175;
+			input[i * 3 + 2] = 175;
+		}
+
+		byte[] trueInput = EncodePng(input, 3, 3);
+
+		// 1. Test half of the image set to 0, half to 255
+		int testThreshold = 125;
+		using Stream s = new MemoryStream(trueInput);
+		var inImg = new FormFile(s, 0, s.Length, "image", "test.png");
+		var controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		byte[] res = ReturnByteArrayFromIActionResult(controllerResult);
+
+		byte[] expected = new byte[input.Length];
+		for (int i = 0; i < 5; i++)
+		{
+			expected[i * 3] = 0;
+			expected[i * 3 + 1] = 0;
+			expected[i * 3 + 2] = 0;
+		}
+		Assert.Equal(expected, res);
+
+		// 2. Test all below threshold, set to 0
+		testThreshold = 200;
+		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		res = ReturnByteArrayFromIActionResult(controllerResult); ;
+
+		expected = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+		Assert.Equal(expected, res);
+
+		// 3. Test all values below threshold, set to 255
+		expected = [255, 255, 255, 255, 255, 255, 255, 255, 255];
+		testThreshold = 25;
+		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		res = ReturnByteArrayFromIActionResult(controllerResult);
+		Assert.Equal(expected, res);
+
+		// 4. Test at threshold
+		expected = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+		testThreshold = 200;
+		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		res = ReturnByteArrayFromIActionResult(controllerResult);
+		Assert.Equal(expected, res);
+
+		// 5. Test just above threshold
+		testThreshold = 176;
+		// expected still all 0s
+		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		res = ReturnByteArrayFromIActionResult(controllerResult);
+		Assert.Equal(expected, res);
+
+		// 6. Test just below threshold
+		testThreshold = 24;
+		expected = [255, 255, 255, 255, 255, 255, 255, 255, 255];
+		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
+		res = ReturnByteArrayFromIActionResult(controllerResult);
+		Assert.Equal(expected, res);
 	}
 
 	private static byte[] GenerateTestImg(int imgSize)
@@ -246,5 +300,13 @@ public class ImageProcessingServiceUnitTests
 			stream);
 
 		return stream.ToArray();
+	}
+
+	private static byte[] ReturnByteArrayFromIActionResult(IActionResult res)
+	{
+		FileContentResult fileResult = Assert.IsType<FileContentResult>(res, exactMatch: false);
+		MemoryStream resultStream = new(fileResult.FileContents);
+		ImageResult resImg = ImageResult.FromStream(resultStream, StbImageSharp.ColorComponents.RedGreenBlue);
+		return resImg.Data;
 	}
 }
