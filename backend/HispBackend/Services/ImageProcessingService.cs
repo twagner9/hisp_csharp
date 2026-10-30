@@ -5,6 +5,14 @@ using StbImageSharp;
 using StbImageWriteSharp;
 using System.Runtime.InteropServices;
 
+/*
+	FIXME: Images taken from phones have EXIF data; this means there is a tag that tells the device that the image should be rotated.
+	StbImage does not account for this, and just takes raw PNG data. When I pass the data back after writing through StbImage, the code
+	does not account for this EXIF, which means the pixel data is typically rotated 90 degrees. The only solution to this is reading the
+	EXIF orientation tag, and then swapping width and height for some of the values (specifically if the tag is:
+	transpose (5), rotate 90 degrees clockwise (6), transverse (7), rotate 90 counter clockwise (8)), ensuring whole pixels (i.e. all channels)
+	are moved rather than individual values, which could scramble RGB vals
+*/
 public partial class ImageProcessingService
 {
 	private readonly IWebHostEnvironment? _environment;

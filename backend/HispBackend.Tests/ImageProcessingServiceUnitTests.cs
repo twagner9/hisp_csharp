@@ -179,7 +179,8 @@ public class ImageProcessingServiceUnitTests
 		ImageController controller = new(ips);
 		// First just write the tests
 		// 3x3 image will be 3x3x3 for the 3 color channels, so 27 pixel vals
-		byte[] input = new byte[27];
+		const int NUM_PIXELS = 27;
+		byte[] input = new byte[NUM_PIXELS];
 
 		// Do RGB
 		for (int i = 0; i < 5; i++)
@@ -211,6 +212,12 @@ public class ImageProcessingServiceUnitTests
 			expected[i * 3 + 1] = 0;
 			expected[i * 3 + 2] = 0;
 		}
+		for (int i = 5; i < 9; i++)
+		{
+			expected[i * 3] = 255;
+			expected[i * 3 + 1] = 255;
+			expected[i * 3 + 2] = 255;
+		}
 		Assert.Equal(expected, res);
 
 		// 2. Test all below threshold, set to 0
@@ -218,18 +225,27 @@ public class ImageProcessingServiceUnitTests
 		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
 		res = ReturnByteArrayFromIActionResult(controllerResult); ;
 
-		expected = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+		for (int i = 0; i < NUM_PIXELS; i++)
+		{
+			expected[i] = 0;
+		}
 		Assert.Equal(expected, res);
 
 		// 3. Test all values below threshold, set to 255
-		expected = [255, 255, 255, 255, 255, 255, 255, 255, 255];
+		for (int i = 0; i < NUM_PIXELS; i++)
+		{
+			expected[i] = 255;
+		}
 		testThreshold = 25;
 		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
 		res = ReturnByteArrayFromIActionResult(controllerResult);
 		Assert.Equal(expected, res);
 
 		// 4. Test at threshold
-		expected = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+		for (int i = 0; i < NUM_PIXELS; i++)
+		{
+			expected[i] = 0;
+		}
 		testThreshold = 200;
 		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
 		res = ReturnByteArrayFromIActionResult(controllerResult);
@@ -244,7 +260,10 @@ public class ImageProcessingServiceUnitTests
 
 		// 6. Test just below threshold
 		testThreshold = 24;
-		expected = [255, 255, 255, 255, 255, 255, 255, 255, 255];
+		for (int i = 0; i < NUM_PIXELS; i++)
+		{
+			expected[i] = 255;
+		}
 		controllerResult = controller.SimpleThreshold(inImg, testThreshold);
 		res = ReturnByteArrayFromIActionResult(controllerResult);
 		Assert.Equal(expected, res);

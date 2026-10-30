@@ -41,8 +41,10 @@ export class SubmitButton {
       if (this.selectionSvc.userSelectedProcess() === 'gblur') {
         formData?.append('sigma', this.selectionSvc.sigmaVal().toString());
       }
-    } else {
+    } else if (this.selectionSvc.userSelectedProcess() === 'adj_brightness') {
       formData?.append('delta', this.selectionSvc.deltaVal().toString());
+    } else if (this.selectionSvc.userSelectedProcess() === 'simple_threshold') {
+      formData?.append('threshold', this.selectionSvc.thresholdVal().toString());
     }
 
     console.log([...formData!.entries()]);

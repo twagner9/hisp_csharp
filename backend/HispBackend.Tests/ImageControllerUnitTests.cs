@@ -92,14 +92,4 @@ public class ImageControllerUnitTests
 		var badRequest = Assert.IsType<BadRequestObjectResult>(result);
 		Assert.Equal("Sigma value must be 0.0 or greater.", badRequest.Value);
 	}
-
-	// TODO: move this to its own source file; this is testing the ImageProcessingService output, not the ImageController
-
-
-	// [Fact]
-	// public void Process_InvalidKernelSize_ReturnsBadRequest()
-	// {
-	// 	ImageProcessingService ips = new ImageProcessingService();
-	// 	var controller = new ImageController(ips);
-	// }
 }
