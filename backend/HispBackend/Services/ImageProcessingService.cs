@@ -48,10 +48,6 @@ public partial class ImageProcessingService
 		ImageResult image = ImageResult.FromStream(imageStream, StbImageSharp.ColorComponents.RedGreenBlueAlpha);
 
 		string imgType = image.GetType().ToString();
-		Console.WriteLine("Image width: " + image.Width);
-		Console.WriteLine("Image height: " + image.Height);
-		Console.WriteLine("Image type: " + image.GetType());
-		Console.WriteLine("Image name: " + image.ToString());
 	}
 
 	public byte[] SimpleBlur(Stream imageStream, int kernelRadius)
@@ -60,12 +56,6 @@ public partial class ImageProcessingService
 		ImageResult img = ImageResult.FromStream(imageStream, StbImageSharp.ColorComponents.RedGreenBlue);
 		int width = img.Width;
 		int height = img.Height;
-
-		Console.WriteLine($"Image width: {width}");
-		Console.WriteLine($"Image height: {height}");
-		Console.WriteLine(
-			$"Decoded pixel: {img.Data[0]}, {img.Data[1]}, {img.Data[2]}"
-		);
 
 		byte[] output = new byte[width * height * 3];
 		int result = image_blur(img.Data, output, width, height, kernelRadius);

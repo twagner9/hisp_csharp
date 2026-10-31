@@ -23,9 +23,6 @@ public class ImageController : ControllerBase
             return BadRequest("No image provided");
         }
 
-        Console.WriteLine("Received image: " + image.FileName);
-        Console.WriteLine("Content Type: " + image.ContentType);
-        Console.WriteLine("Size: " + image.Length);
         using Stream stream = image.OpenReadStream();
         _imageProcessingService.Process(stream);
 
@@ -52,12 +49,16 @@ public class ImageController : ControllerBase
             return BadRequest("Provided kernel radius is 0 or less.");
         }
 
-        // Java's equivalent is try-with-resource: try (BufferedWriter b = new BufferedWriter(file)), which limits
-        // the BufferedWriter's scope. The using keyword is the same here; it's saying that once the scope ends,
-        // the lifetime of the object should end, instead of waiting for garbage collection.
-        // Basically a nice little optimizaiton that prevents complete reliance on garbage collection which might
-        // live too long.
-        Console.WriteLine($"SimpleBlur: image.Length = {image.Length}");
+        /*
+         Java's equivalent is try-with-resource: try (BufferedWriter b = new BufferedWriter(file)), which limits
+         the BufferedWriter's scope. The using keyword is the same here; it's saying that once the scope ends,
+         the lifetime of the object should end, instead of waiting for garbage collection.
+         Basically a nice little optimizaiton that prevents complete reliance on garbage collection which might
+         live too long.
+
+         Also important to note is that using requires an implementation of IDisposable; if it doesn't
+         it can't be used in a using statement.
+        */
         using Stream s = image.OpenReadStream();
         byte[] res = _imageProcessingService.SimpleBlur(s, kernelRadius);
         return File(res, "image/png");
