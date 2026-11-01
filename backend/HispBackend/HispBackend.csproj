@@ -1,21 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
-    <PackageReference Include="StbImageSharp" Version="2.30.16" />
-    <Content Include="TestData/tuck_tuck.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
-    <None Include="../../build/libHISPImageProcessing.so" Link="libHISPImageProcessing.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<NativeSourceDir Condition="'$(NativeBuildDir)' == ''">../../native</NativeSourceDir>
+		<NativeBuildDir Condition="'$(NativeBuildDir)' == ''">../../build</NativeBuildDir>
+		<CMakeExe>cmake</CMakeExe>
+	</PropertyGroup>
+	<PropertyGroup>
+		<VsBundledCMake>$(VSINSTALLDIR)Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe</VsBundledCMake>
+		<CMakeExe Condition="'$(VSINSTALLDIR)' != '' And Exists('$(VsBundledCMake)')">$(VsBundledCMake)</CMakeExe>
+	</PropertyGroup>
+
+	<Target Name="RunCMake" BeforeTargets="BeforeBuild" Condition="'$SKipNativeBuild)' != 'true'">
+		<!-- Linux config generator -->
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="'$(CMakeExe)' -S '$(NativeSourceDir)' -B '$(NativeBuildDir)' -DCMAKE_BUILD_TYPE=$(Configuration)" />
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="'$(CMakeExe)' --build '$(NativeBuildDir)' --parallel"/>
+
+		<!-- Windows: Visual Studio generator -->
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="'$(CMakeExe)' --build '$(NativeBuildDir)' --config $(Configuration)"/>
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="'$(CMakeExe)' -S '$(NativeSourceDir) -B '$(NativeBuildDir)' -A x64"/>
+	</Target>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
+		<PackageReference Include="StbImageSharp" Version="2.30.16" />
+		<Content Include="TestData/tuck_tuck.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+		<None Include="../../build/libHISPImageProcessing.so" Link="libHISPImageProcessing.so" CopyToOutputDirectory="PreserveNewest"/>
+	</ItemGroup>
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<None Include="../../build/HISPImageProcessing.dll" Link="HISPImageProcessing.dll" CopyToOutputDirectory="PreserveNewest"/>
+	</ItemGroup>
 </Project>

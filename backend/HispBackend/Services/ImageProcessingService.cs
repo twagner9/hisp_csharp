@@ -28,19 +28,19 @@ public partial class ImageProcessingService
 	{
 	}
 
-	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	[LibraryImport("HISPImageProcessing", SetLastError = true)]
 	private static partial int image_blur([In] byte[] input, [Out] byte[] output, int width, int height, int kernelRadius);
 
-	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	[LibraryImport("HISPImageProcessing", SetLastError = true)]
 	private static partial int image_gaussian_blur([In] byte[] input, [Out] byte[] output, int width, int height, int kernelRadius);
 
-	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	[LibraryImport("HISPImageProcessing", SetLastError = true)]
 	private static partial int image_grayscale([In] byte[] input, [Out] byte[] output, int width, int height);
 
-	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	[LibraryImport("HISPImageProcessing", SetLastError = true)]
 	private static partial int image_adjust_brightness([In] byte[] input, [Out] byte[] output, int width, int height, int interval);
 
-	[LibraryImport("libHISPImageProcessing.so", SetLastError = true)]
+	[LibraryImport("HISPImageProcessing", SetLastError = true)]
 	private static partial int image_simple_threshold([In] byte[] input, [Out] byte[] output, int width, int height, int threshold);
 
 	public void Process(Stream imageStream)
