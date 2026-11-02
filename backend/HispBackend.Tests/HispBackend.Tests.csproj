@@ -7,25 +7,30 @@
 	<IsPackable>false</IsPackable>
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-	
+
 	<PropertyGroup>
-		<NativeSourceDir Condition="'$(NativeBuildDir)' == ''">../../native</NativeSourceDir>
-		<NativeBuildDir Condition="'$(NativeBuildDir)' == ''">../../build</NativeBuildDir>
+		<NativeSourceDir Condition="'$(NativeSourceDir)' == ''">$(MSBuildProjectDirectory)/../HISP</NativeSourceDir>
+		<NativeBuildDir Condition="'$(NativeBuildDir)' == ''">$(NativeSourceDir)</NativeBuildDir>
 		<CMakeExe>cmake</CMakeExe>
 	</PropertyGroup>
 	<PropertyGroup>
-		<VsBundledCMake>$(VSINSTALLDIR)Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe</VsBundledCMake>
-		<CMakeExe Condition="'$(VSINSTALLDIR)' != '' And Exists('$(VsBundledCMake)')">$(VsBundledCMake)</CMakeExe>
+		<CMakeExe>cmake</CMakeExe>
+		<VsBundledCMake>$([System.IO.Path]::GetFullPath('$(MSBuildExtensionsPath)\..\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'))</VsBundledCMake>
+		<CMakeExe Condition="Exists('$(VsBundledCMake)')">$(VsBundledCMake)</CMakeExe>
 	</PropertyGroup>
-	
-	<Target Name="RunCMake" BeforeTargets="BeforeBuild" Condition="'$SKipNativeBuild)' != 'true'">
-		<!-- Linux config generator -->
-		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="'$(CMakeExe)' -S '$(NativeSourceDir)' -B '$(NativeBuildDir)' -DCMAKE_BUILD_TYPE=$(Configuration)" />
-		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="'$(CMakeExe)' --build '$(NativeBuildDir)' --parallel"/>
-		
+
+	<Target Name="RunCMake" BeforeTargets="BeforeBuild" Condition="'$(SkipNativeBuild)' != 'true'">
+		<!-- Linux -->
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))"
+			  Command="&quot;$(CMakeExe)&quot; -S &quot;$(NativeSourceDir)&quot; -B &quot;$(NativeBuildDir)&quot; -DCMAKE_BUILD_TYPE=$(Configuration)" />
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))"
+			  Command="&quot;$(CMakeExe)&quot; --build &quot;$(NativeBuildDir)&quot; --parallel" />
+
 		<!-- Windows: Visual Studio generator -->
-		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="'$(CMakeExe)' --build '$(NativeBuildDir)' --config $(Configuration)"/>
-		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="'$(CMakeExe)' -S '$(NativeSourceDir) -B '$(NativeBuildDir)' -A x64"/>
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))"
+			  Command="&quot;$(CMakeExe)&quot; -S &quot;$(NativeSourceDir)&quot; -B &quot;$(NativeBuildDir)&quot; -A x64" />
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))"
+			  Command="&quot;$(CMakeExe)&quot; --build &quot;$(NativeBuildDir)&quot; --config $(Configuration)" />
 	</Target>
 
 	<ItemGroup>
@@ -52,9 +57,9 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-		<None Include="../../build/libHISPImageProcessing.so" Link="libHISPImageProcessing.so" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="$(NativeBuildDir)/libHISPImageProcessing.so" Link="libHISPImageProcessing.so" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-		<None Include="../../build/HISPImageProcessing.dll" Link="HISPImageProcessing.dll" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="$(NativeBuildDir)/$(Configuration)/HISPImageProcessing.dll" Link="HISPImageProcessing.dll" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 </Project>
