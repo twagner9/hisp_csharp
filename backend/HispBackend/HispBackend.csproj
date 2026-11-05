@@ -9,7 +9,7 @@
 
 	<PropertyGroup>
 		<NativeSourceDir Condition="'$(NativeSourceDir)' == ''">$(MSBuildProjectDirectory)/../HISP</NativeSourceDir>
-		<NativeBuildDir Condition="'$(NativeBuildDir)' == ''">$(NativeSourceDir)</NativeBuildDir>
+		<NativeBuildDir Condition="'$(NativeBuildDir)' == ''">$(MSBuildProjectDirectory)/$(BaseIntermediateOutputPath)native/$(Configuration)</NativeBuildDir>
 		<CMakeExe>cmake</CMakeExe>
 	</PropertyGroup>
 	<PropertyGroup>
