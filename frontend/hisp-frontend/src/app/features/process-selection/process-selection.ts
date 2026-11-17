@@ -1,6 +1,7 @@
 import { Component, computed, effect, ElementRef, signal, ViewChild } from '@angular/core';
 import { SelectedOpService } from '../../core/services/prcoess-selection.service';
 import { FormsModule } from '@angular/forms';
+import { PROCESS_OPTIONS } from './ProcessOptions';
 
 /**
  * OperationFlags specifies which operations are available, and
@@ -55,13 +56,7 @@ const OPERATION_FLAGS: Readonly<Record<string, OperationFlags>> = {
   imports: [FormsModule],
 })
 export class ProcessSelection {
-  options = [
-    { value: 'blur', label: 'Simple Blur' },
-    { value: 'gblur', label: 'Gaussian Blur' },
-    { value: 'grayscale', label: 'Grayscale' },
-    { value: 'adj_brightness', label: 'Adjust Brightness' },
-    { value: 'simple_threshold', label: 'Simple Global Threshold' },
-  ];
+  options = PROCESS_OPTIONS;
 
   @ViewChild('sigmaInput') sigmaInput!: ElementRef<HTMLInputElement>;
   @ViewChild('radiusInput') radiusInput!: ElementRef<HTMLInputElement>;

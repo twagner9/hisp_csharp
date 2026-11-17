@@ -7,7 +7,7 @@
       }
     </select>
   </div>
-  <div class="additionalData" [class.hidden]="!needRadius()">
+  <div class="additionalData" data-param="blur gblur" [class.hidden]="!needRadius()">
     <label>Kernel radius: </label>
     <input
       type="number"
@@ -18,7 +18,7 @@
       (change)="updateKernel($event)"
     />
   </div>
-  <div class="additionalData" [class.hidden]="!needSigma()">
+  <div class="additionalData" data-param="gblur" [class.hidden]="!needSigma()">
     <label>Sigma value: </label>
     <input
       type="number"
@@ -29,7 +29,7 @@
       (change)="updateSigma($event)"
     />
   </div>
-  <div class="additionalData" [class.hidden]="!needDelta()">
+  <div class="additionalData" data-param="adj_brightness" [class.hidden]="!needDelta()">
     <label>Delta value: </label>
     <input
       type="number"
@@ -40,7 +40,7 @@
       (change)="updateDelta($event)"
     />
   </div>
-  <div class="additionalData" [class.hidden]="!needThreshold()">
+  <div class="additionalData" data-param="simple_threshold" [class.hidden]="!needThreshold()">
     <label>Threshold value: </label>
     <input
       type="number"
