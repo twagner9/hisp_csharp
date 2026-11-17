@@ -35,7 +35,7 @@ describe('ProcessSelection', () => {
 
   // Will ensure no options are removed that should still be present.
   it('should contain the core processes', () => {
-    const values = PROCESS_OPTIONS.map(o => o.value);
+    const values = PROCESS_OPTIONS.map((o) => o.value);
     expect(values).toContain('blur');
     expect(values).toContain('gblur');
     expect(values).toContain('grayscale');
@@ -44,9 +44,58 @@ describe('ProcessSelection', () => {
   });
 
   it('should display only needed inputs', () => {
-    const processSelectionElement = fixture.nativeElement as HTMLElement;
-    const visible = Array.from(processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)')).flatMap(d => d.dataset['param']?.split(' ')?? []);
+    const processSelectionElement: HTMLElement = fixture.nativeElement as HTMLElement;
 
-    expect(visible[0]).toEqual('blur');
+    let visible = Array.from(
+      processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)'),
+    ).flatMap((d) => d.dataset['param']?.split(' ') ?? []);
+
+    expect(visible[0]).toEqual('blurs');
+
+    // Update the selected option
+    const select: HTMLSelectElement = processSelectionElement.querySelector(
+      'select.mainSelector',
+    ) as HTMLSelectElement;
+    select.selectedIndex = 1;
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    visible = Array.from(
+      processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)'),
+    ).flatMap((d) => d.dataset['param']?.split(' ') ?? []);
+
+    expect(visible.length).toBe(2);
+    expect(visible[0]).toBe('blurs');
+    expect(visible[1]).toBe('gblur');
+
+    // Check idx 2
+    select.selectedIndex = 2;
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    visible = Array.from(
+      processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)'),
+    ).flatMap((d) => d.dataset['param']?.split(' ') ?? []);
+
+    expect(visible.length).toBe(0);
+    expect(visible[0]).toBe(undefined); // undefined because grayscale has no additional inputs!
+
+    select.selectedIndex = 3;
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    visible = Array.from(
+      processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)'),
+    ).flatMap((d) => d.dataset['param']?.split(' ') ?? []);
+
+    expect(visible.length).toBe(1);
+    expect(visible[0]).toBe('adj_brightness');
+
+    select.selectedIndex = 4;
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    visible = Array.from(
+      processSelectionElement.querySelectorAll<HTMLElement>('.additionalData:not(.hidden)'),
+    ).flatMap((d) => d.dataset['param']?.split(' ') ?? []);
+
+    expect(visible.length).toBe(1);
+    expect(visible[0]).toBe('simple_threshold');
   });
 });

@@ -1,13 +1,13 @@
 <div class="inputComponents">
   <div class="imageOpData">
     <label>Image operation: </label>
-    <select (change)="updateSelectedOp($event)">
+    <select class="mainSelector" (change)="updateSelectedOp($event)">
       @for (option of options; track option.value) {
         <option [value]="option.value">{{ option.label }}</option>
       }
     </select>
   </div>
-  <div class="additionalData" data-param="blur gblur" [class.hidden]="!needRadius()">
+  <div class="additionalData" data-param="blurs" [class.hidden]="!needRadius()">
     <label>Kernel radius: </label>
     <input
       type="number"
