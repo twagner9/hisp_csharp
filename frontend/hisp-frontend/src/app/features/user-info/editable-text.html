@@ -1,4 +1,4 @@
-<span>
+<span class="mainSpan">
     @if (editing()) {
         <input 
 			#editableTextInput
@@ -8,7 +8,6 @@
 			(blur)="saveUserInput()" 
 			(keydown.enter)="saveUserInput()"
 			/>
-    } @else {<span class="autoWidth" (click)="editing.set(true)">
-				{{savedText()}}
-			</span>}
+    } @else 
+    {<span class="autoWidth" (click)="editing.set(true)">{{savedText()}}</span>}
 </span>

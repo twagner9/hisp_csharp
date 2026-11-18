@@ -6,27 +6,26 @@
   "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
   "editor.formatOnSave": true,
   "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.tabSize": 2,
-      "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 2,
     "editor.formatOnSave": true
-
   },
   "[csharp]": {
     "editor.maxTokenizationLineLength": 2500,
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.tabSize": 4,
     "editor.formatOnSave": true
-},
-	"cmake.sourceDirectory": "${workspaceFolder}/backend/HISP",
-	"[c]": {
-		"editor.formatOnSave": true,
-		"editor.tabSize": 4,
-		"editor.defaultFormatter": "ms-vscode.cpptools"
-	},
-  "cmake.cmakePath": "/usr/bin/cmake",
+  },
+  "cmake.sourceDirectory": "${workspaceFolder}/backend/HISP",
+  "[c]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "cmake.cmakePath": "/usr/bin/cmake"
 }
