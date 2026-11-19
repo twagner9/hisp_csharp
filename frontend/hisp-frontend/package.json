@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "prepare": "husky"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
@@ -25,8 +26,11 @@
     "@angular/cli": "^22.1.2",
     "@angular/compiler-cli": "^22.1.0",
     "jsdom": "^28.0.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.10.1",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
-  }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,scss,json,md,html}": "prettier --write"
+  } 
 }
