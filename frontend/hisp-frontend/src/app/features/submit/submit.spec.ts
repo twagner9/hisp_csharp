@@ -18,4 +18,14 @@ describe('SubmitButton', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should be disabled by default', () => {
+    const submitButton: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(submitButton.disabled).toBeTruthy();
+  });
+
+  it('should have \'submit\' as text', () => {
+    const submitButton: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(submitButton.textContent).toBe('Submit');
+  })
 });

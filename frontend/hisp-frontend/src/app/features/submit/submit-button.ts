@@ -5,9 +5,7 @@ import { DisplayService } from '../../core/services/display.service';
 
 @Component({
   selector: 'submit-button',
-  template: `<button (click)="submitProcessingJob()" [disabled]="!readyForSubmission()">
-    Submit
-  </button>`,
+  template: `<button (click)="submitProcessingJob()" [disabled]="!readyForSubmission()">Submit</button>`,
 })
 export class SubmitButton {
   readyForSubmission = computed(() => {
