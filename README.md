@@ -60,15 +60,6 @@ This is an early-stage / learning project, not a finished product:
 
 ## Known limitations
 
-- **The native image library lives in a separate, private submodule**
-  (`backend/HISP`, mapped via SSH in `.gitmodules`). If you don't have
-  access to that repository you won't be able to build
-  `libHISPImageProcessing.so` yourself; you'll need the maintainer to grant
-  access or to hand you a prebuilt `.so`. Everything below assumes you have
-  it.
-- **The `.so` is Linux-only** (`LibraryImport("libHISPImageProcessing.so", ...)`),
-  so the backend currently only runs on Linux (or WSL). There's no macOS
-  (`.dylib`) or Windows (`.dll`) build yet.
 - **CORS isn't configured** on the backend. The Angular dev server (port
   `4200`) calling the API (port `5192`) may be blocked by the browser
   unless you add CORS middleware in `Program.cs` or otherwise proxy the
